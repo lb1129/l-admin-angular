@@ -9,7 +9,8 @@
     "test": "ng test",
     "lint": "ng lint",
     "lint:style": "stylelint \"**/*.{css,less,html}\" --fix --ignore-path .gitignore",
-    "format": "prettier --write . --ignore-path .gitignore"
+    "format": "prettier --write . --ignore-path .gitignore",
+    "prepare": "husky install"
   },
   "private": true,
   "dependencies": {
@@ -40,6 +41,7 @@
     "eslint": "^8.40.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-prettier": "^4.2.1",
+    "husky": "^8.0.3",
     "jasmine-core": "~4.6.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",
