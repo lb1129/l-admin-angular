@@ -1,0 +1,31 @@
+{
+  "plugins": ["stylelint-prettier"],
+  "extends": ["stylelint-config-standard"],
+  "overrides": [
+    {
+      "files": ["*.html", "**/*.html"],
+      "extends": ["stylelint-config-html"]
+    },
+    {
+      "files": ["*.less", "**/*.less"],
+      "customSyntax": "postcss-less"
+    }
+  ],
+  "rules": {
+    "prettier/prettier": true,
+    "no-empty-source": null,
+    "no-descending-specificity": null,
+    "selector-type-no-unknown": [
+      true,
+      {
+        "ignoreTypes": ["/^nz-/", "/^app-/"]
+      }
+    ],
+    "selector-pseudo-element-no-unknown": [
+      true,
+      {
+        "ignorePseudoElements": ["ng-deep"]
+      }
+    ]
+  }
+}
