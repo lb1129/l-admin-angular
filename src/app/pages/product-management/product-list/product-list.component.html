@@ -1,0 +1,97 @@
+<ng-template #totalTemplate let-total>共 {{ total }} 条</ng-template>
+<ng-template #tableHeader>
+  <nz-button-group>
+    <button nz-button nzType="primary" (click)="addHandler()">新增</button>
+    <button
+      nz-button
+      [disabled]="setOfCheckedId.size <= 0"
+      nz-popconfirm
+      nzPopconfirmTitle="确定删除吗？"
+      (nzOnConfirm)="deleteHandler()"
+    >
+      删除
+    </button>
+  </nz-button-group>
+  <div style="float: right">
+    <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
+      <input type="text" nz-input placeholder="按名称搜索" />
+    </nz-input-group>
+    <ng-template #suffixIconButton>
+      <button nz-button nzType="primary" nzSearch><span nz-icon nzType="search"></span></button>
+    </ng-template>
+  </div>
+</ng-template>
+<nz-table
+  #table
+  nzBordered
+  [nzTitle]="tableHeader"
+  nzShowPagination
+  nzShowSizeChanger
+  nzShowQuickJumper
+  [nzShowTotal]="totalTemplate"
+  [nzData]="listOfData"
+  [nzScroll]="{ x: '1200px', y: '396px' }"
+>
+  <thead>
+    <tr>
+      <th
+        nzLeft
+        nzWidth="50px"
+        [nzChecked]="allChecked"
+        [nzIndeterminate]="indeterminate"
+        (nzCheckedChange)="onAllChecked($event)"
+      ></th>
+      <th
+        *ngFor="let column of columns"
+        [nzWidth]="column.width ?? ''"
+        [nzLeft]="column.fixed === 'left'"
+        [nzRight]="column.fixed === 'right'"
+        [nzAlign]="column.align ?? 'left'"
+      >
+        {{ column.title }}
+      </th>
+      <th nzWidth="180px" nzRight nzAlign="center">操作</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let data of table.data">
+      <td
+        nzLeft
+        [nzChecked]="setOfCheckedId.has(data.id)"
+        (nzCheckedChange)="onItemChecked(data.id, $event)"
+      ></td>
+      <td
+        *ngFor="let column of columns"
+        [nzLeft]="column.fixed === 'left'"
+        [nzRight]="column.fixed === 'right'"
+        [nzEllipsis]="column.ellipsis"
+        [nzAlign]="column.align ?? 'left'"
+      >
+        <ng-container *ngIf="column.dataIndex === 'name'; else elseNameBlock">
+          <a
+            nz-button
+            nzType="link"
+            style="padding: 0"
+            [routerLink]="['/productManagement/productDetail/', data.id]"
+            >{{ data[column.dataIndex] }}</a
+          >
+        </ng-container>
+        <ng-template #elseNameBlock>{{ data[column.dataIndex] }}</ng-template>
+      </td>
+      <td nzRight nzAlign="center">
+        <a nz-button nzType="link" [routerLink]="['/productManagement/productAddOrEdit/', data.id]"
+          >编辑</a
+        >
+        <nz-divider nzType="vertical"></nz-divider>
+        <a
+          nz-button
+          nzType="link"
+          nz-popconfirm
+          nzPopconfirmTitle="确定删除吗？"
+          (nzOnConfirm)="deleteHandler(data.id)"
+          >删除</a
+        >
+      </td>
+    </tr>
+  </tbody>
+</nz-table>

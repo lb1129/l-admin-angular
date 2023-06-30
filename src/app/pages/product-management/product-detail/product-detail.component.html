@@ -1,0 +1,21 @@
+<nz-page-header (nzBack)="backHandler()" nzBackIcon nzTitle="详情">
+  <nz-page-header-extra>
+    <button nz-button nzType="primary" (click)="editHandler()">编辑</button>
+  </nz-page-header-extra>
+  <nz-page-header-content>
+    <nz-skeleton [nzLoading]="false">
+      <nz-descriptions nzBordered>
+        <nz-descriptions-item nzTitle="name">{{ details.name }}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="brand">{{ details.brand }}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="category">{{ details.category }}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="price">{{ details.price }}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="color">{{ details.color }}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="inventory">{{ details.inventory }}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="style" [nzSpan]="3">{{
+          details.style
+        }}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="describe">{{ details.describe }}</nz-descriptions-item>
+      </nz-descriptions>
+    </nz-skeleton>
+  </nz-page-header-content>
+</nz-page-header>
