@@ -1,0 +1,62 @@
+@import url('../../../../../node_modules/ng-zorro-antd/style/themes/variable.less');
+
+.index {
+  height: 100%;
+
+  &-header {
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    color: @white;
+
+    &-logo {
+      font-weight: 600;
+      font-size: 18px;
+
+      & > a {
+        display: flex;
+        align-items: center;
+        color: @white;
+
+        & > img {
+          width: 38px;
+          height: 38px;
+        }
+      }
+    }
+
+    &-center {
+      flex: 1;
+    }
+
+    &-right {
+      display: flex;
+
+      &-item {
+        padding: 0 12px;
+        cursor: pointer;
+        transition: all 0.3s;
+
+        &:hover {
+          background-color: #252a3d;
+        }
+      }
+
+      &-item_user {
+        display: flex;
+        align-items: center;
+      }
+    }
+  }
+
+  &-slider-content {
+    height: 100%;
+    overflow: auto;
+    border-bottom: @border-width-base solid @border-color-base;
+  }
+
+  &-content {
+    background-color: @component-background;
+    overflow: hidden;
+  }
+}

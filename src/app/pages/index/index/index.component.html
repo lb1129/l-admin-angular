@@ -1,0 +1,84 @@
+<nz-layout class="index">
+  <nz-header class="index-header">
+    <div class="index-header-logo">
+      <a href="/">
+        <img [src]="logoSvg" alt="logo" />
+        l-admin-angular
+      </a>
+    </div>
+    <div class="index-header-center"></div>
+    <div class="index-header-right">
+      <span
+        nz-dropdown
+        [nzDropdownMenu]="menu"
+        class="index-header-right-item index-header-right-item_user"
+      >
+        <nz-avatar nzSize="small" nzSrc="../../../../assets/user.png" />
+        <span style="margin-left: 8px">viho</span>
+      </span>
+      <nz-dropdown-menu #menu>
+        <ul nz-menu nzSelectable>
+          <li nz-menu-item>个人中心</li>
+          <li nz-menu-divider></li>
+          <li nz-menu-item>退出登录</li>
+        </ul>
+      </nz-dropdown-menu>
+    </div>
+  </nz-header>
+  <nz-layout>
+    <nz-sider
+      nzCollapsible
+      [nzWidth]="208"
+      [nzCollapsedWidth]="48"
+      nzBreakpoint="md"
+      [(nzCollapsed)]="isCollapsed"
+      nzTheme="light"
+    >
+      <div class="index-slider-content">
+        <ul nz-menu nzMode="inline" [style.width]="isCollapsed ? '48px' : null">
+          <li
+            nz-menu-item
+            nzMatchRouter
+            nzMatchRouterExact
+            nz-tooltip
+            nzTooltipPlacement="right"
+            [nzTooltipTitle]="isCollapsed ? '首页' : ''"
+          >
+            <span nz-icon nzType="dashboard"></span>
+            <span>
+              <a routerLink="/">首页</a>
+            </span>
+          </li>
+          <li nz-submenu nzOpen nzTitle="产品管理" nzIcon="shop">
+            <ul>
+              <li nz-menu-item nzMatchRouter nzMatchRouterExact>
+                <a routerLink="/productManagement/productList">产品列表</a>
+              </li>
+            </ul>
+          </li>
+          <li
+            nz-menu-item
+            nzMatchRouter
+            nzMatchRouterExact
+            nz-tooltip
+            nzTooltipPlacement="right"
+            [nzTooltipTitle]="isCollapsed ? '个人中心' : ''"
+          >
+            <span nz-icon nzType="user"></span>
+            <span>
+              <a routerLink="/personalCenter">个人中心</a>
+            </span>
+          </li>
+        </ul>
+      </div>
+    </nz-sider>
+    <nz-layout style="padding: 0 24px 24px">
+      <nz-breadcrumb style="margin: 16px 0">
+        <nz-breadcrumb-item>面包屑</nz-breadcrumb-item>
+      </nz-breadcrumb>
+      <nz-content class="index-content">
+        <router-outlet></router-outlet>
+      </nz-content>
+    </nz-layout>
+  </nz-layout>
+</nz-layout>
