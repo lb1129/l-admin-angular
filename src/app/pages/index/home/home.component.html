@@ -1,1 +1,6 @@
-<p>home works!</p>
+<div class="home">
+  <div class="home-chart" #chart></div>
+  <div class="home-map">
+    <app-position-map (appChange)="changeHandler($event)"></app-position-map>
+  </div>
+</div>
