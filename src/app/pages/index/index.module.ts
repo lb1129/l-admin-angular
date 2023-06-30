@@ -17,6 +17,8 @@ import { FormsModule } from '@angular/forms'
 import { HttpClientModule } from '@angular/common/http'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 
+import { PositionMapModule } from '../../shared/position-map/position-map.module'
+
 @NgModule({
   declarations: [IndexComponent, HomeComponent],
   imports: [
@@ -31,7 +33,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
     FormsModule,
     HttpClientModule,
     BrowserAnimationsModule,
-    NzIconModule
+    NzIconModule,
+    PositionMapModule
   ]
 })
 export class IndexModule {}
