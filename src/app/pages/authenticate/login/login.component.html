@@ -1,0 +1,28 @@
+<app-layout>
+  <form nz-form [formGroup]="form" (ngSubmit)="submitHandler()">
+    <nz-form-item>
+      <nz-form-control nzErrorTip="请输入用户名">
+        <nz-input-group class="input-group" nzPrefixIcon="user" nzSize="large">
+          <input
+            type="text"
+            nz-input
+            formControlName="userName"
+            placeholder="用户名admin/viho/user"
+          />
+        </nz-input-group>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-control nzErrorTip="请输入密码">
+        <nz-input-group class="input-group" nzPrefixIcon="lock" nzSize="large">
+          <input type="password" nz-input formControlName="password" placeholder="密码a123456" />
+        </nz-input-group>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item style="display: block">
+      <a routerLink="/register">注册账号</a>
+      <a routerLink="/findPassword" style="float: right">忘记密码</a>
+    </nz-form-item>
+    <button nz-button nzType="primary" nzBlock nzSize="large">登录</button>
+  </form>
+</app-layout>
