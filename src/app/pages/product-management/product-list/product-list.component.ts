@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core'
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild, OnDestroy } from '@angular/core'
 import { Router } from '@angular/router'
 import { ProductType } from '../types'
 
@@ -16,8 +16,11 @@ interface Column {
   templateUrl: './product-list.component.html',
   styleUrls: ['./product-list.component.less']
 })
-export class ProductListComponent implements OnInit {
+export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
+  @ViewChild('wrapRef') wrapRef!: ElementRef<HTMLDivElement>
+
   constructor(private router: Router) {}
+
   allChecked = false
   loading = false
   indeterminate = false
@@ -73,6 +76,8 @@ export class ProductListComponent implements OnInit {
       width: '150px'
     }
   ]
+  y = '0px'
+  ro!: ResizeObserver
 
   addHandler() {
     this.router.navigate(['/productManagement/productAddOrEdit'])
@@ -107,7 +112,7 @@ export class ProductListComponent implements OnInit {
     this.refreshCheckedStatus()
   }
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.listOfData = [
       {
         id: '1',
@@ -254,5 +259,16 @@ export class ProductListComponent implements OnInit {
         describe: ''
       }
     ]
+  }
+
+  ngAfterViewInit() {
+    this.ro = new ResizeObserver((entries) => {
+      this.y = `${entries[0].contentRect.height - (64.8 + 64 + 54.8)}px`
+    })
+    this.ro.observe(this.wrapRef.nativeElement)
+  }
+
+  ngOnDestroy() {
+    this.ro.unobserve(this.wrapRef.nativeElement)
   }
 }
