@@ -1,15 +1,21 @@
 import { Component } from '@angular/core'
 import { Router } from '@angular/router'
 import { Location } from '@angular/common'
+import { NzPageHeaderModule } from 'ng-zorro-antd/page-header'
+import { NzDescriptionsModule } from 'ng-zorro-antd/descriptions'
+import { NzSkeletonModule } from 'ng-zorro-antd/skeleton'
+import { NzButtonModule } from 'ng-zorro-antd/button'
 
 import { ProductType } from '../types'
 
 @Component({
+  imports: [NzPageHeaderModule, NzDescriptionsModule, NzSkeletonModule, NzButtonModule],
   selector: 'app-product-detail',
   templateUrl: './product-detail.component.html',
-  styleUrls: ['./product-detail.component.less']
+  styleUrls: ['./product-detail.component.less'],
+  standalone: true
 })
-export class ProductDetailComponent {
+export default class ProductDetailComponent {
   constructor(private router: Router, private location: Location) {}
   details: ProductType = {
     id: '1',

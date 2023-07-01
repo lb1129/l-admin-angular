@@ -1,6 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing'
 
-import { ProductAddOrEditComponent } from './product-add-or-edit.component'
+import { NzIconModule } from 'ng-zorro-antd/icon'
+import { ArrowLeftOutline } from '@ant-design/icons-angular/icons'
+
+import ProductAddOrEditComponent from './product-add-or-edit.component'
 
 describe('ProductAddOrEditComponent', () => {
   let component: ProductAddOrEditComponent
@@ -8,7 +11,8 @@ describe('ProductAddOrEditComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [ProductAddOrEditComponent]
+      imports: [NzIconModule.forRoot([ArrowLeftOutline])],
+      providers: []
     })
     fixture = TestBed.createComponent(ProductAddOrEditComponent)
     component = fixture.componentInstance

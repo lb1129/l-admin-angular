@@ -1,5 +1,12 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild, OnDestroy } from '@angular/core'
-import { Router } from '@angular/router'
+import { CommonModule } from '@angular/common'
+import { Router, RouterModule } from '@angular/router'
+import { NzTableModule } from 'ng-zorro-antd/table'
+import { NzButtonModule } from 'ng-zorro-antd/button'
+import { NzDividerModule } from 'ng-zorro-antd/divider'
+import { NzInputModule } from 'ng-zorro-antd/input'
+import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm'
+import { NzIconModule } from 'ng-zorro-antd/icon'
 import { ProductType } from '../types'
 
 interface Column {
@@ -12,11 +19,22 @@ interface Column {
 }
 
 @Component({
+  imports: [
+    CommonModule,
+    RouterModule,
+    NzTableModule,
+    NzButtonModule,
+    NzDividerModule,
+    NzInputModule,
+    NzPopconfirmModule,
+    NzIconModule
+  ],
   selector: 'app-product-list',
   templateUrl: './product-list.component.html',
-  styleUrls: ['./product-list.component.less']
+  styleUrls: ['./product-list.component.less'],
+  standalone: true
 })
-export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
+export default class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('wrapRef') wrapRef!: ElementRef<HTMLDivElement>
 
   constructor(private router: Router) {}
