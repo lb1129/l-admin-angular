@@ -22,9 +22,10 @@ export interface PositionInfo {
 @Component({
   selector: 'app-position-map',
   templateUrl: './position-map.component.html',
-  styleUrls: ['./position-map.component.less']
+  styleUrls: ['./position-map.component.less'],
+  standalone: true
 })
-export class PositionMapComponent implements AfterViewInit, OnDestroy {
+export default class PositionMapComponent implements AfterViewInit, OnDestroy {
   @ViewChild('wrapRef') wrapRef!: ElementRef<HTMLDivElement>
   @ViewChild('nodeRef') nodeRef!: ElementRef<HTMLDivElement>
   @ViewChild('suggestRef') suggestRef!: ElementRef<HTMLInputElement>
@@ -106,6 +107,7 @@ export class PositionMapComponent implements AfterViewInit, OnDestroy {
         // autocomplete 无配置获取由BMAP渲染的输入提示列表DOM
         // 暂时先这样处理获取输入提示列表DOM，然后设置其最大高度，防止内容超出容器
         setTimeout(() => {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const suggestionDomId = (autocomplete as any)._suggestion?.mainId
           this.suggestionRef = document.getElementById(suggestionDomId)
         }, 200)
