@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing'
+import { provideRouter } from '@angular/router'
 
-import { LayoutComponent } from './layout.component'
+import LayoutComponent from './layout.component'
 
 describe('LayoutComponent', () => {
   let component: LayoutComponent
@@ -8,7 +9,7 @@ describe('LayoutComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [LayoutComponent]
+      providers: [provideRouter([])]
     })
     fixture = TestBed.createComponent(LayoutComponent)
     component = fixture.componentInstance

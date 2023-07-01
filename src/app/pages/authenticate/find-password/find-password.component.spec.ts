@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing'
+import { provideRouter } from '@angular/router'
 
-import { FindPasswordComponent } from './find-password.component'
+import FindPasswordComponent from './find-password.component'
 
 describe('FindPasswordComponent', () => {
   let component: FindPasswordComponent
@@ -8,7 +9,7 @@ describe('FindPasswordComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [FindPasswordComponent]
+      providers: [provideRouter([])]
     })
     fixture = TestBed.createComponent(FindPasswordComponent)
     component = fixture.componentInstance

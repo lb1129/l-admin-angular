@@ -1,5 +1,7 @@
 import { AfterViewInit, Component, ElementRef, ViewChild, NgZone, OnDestroy } from '@angular/core'
-import { PositionInfo } from '@/app/shared/position-map/position-map.component'
+import PositionMapComponent, {
+  type PositionInfo
+} from '@/app/shared/position-map/position-map.component'
 import * as echarts from 'echarts/core'
 import { GridComponent, TooltipComponent } from 'echarts/components'
 import { BarChart } from 'echarts/charts'
@@ -8,11 +10,13 @@ import { CanvasRenderer } from 'echarts/renderers'
 echarts.use([GridComponent, TooltipComponent, BarChart, CanvasRenderer])
 
 @Component({
+  imports: [PositionMapComponent],
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.less']
+  styleUrls: ['./home.component.less'],
+  standalone: true
 })
-export class HomeComponent implements AfterViewInit, OnDestroy {
+export default class HomeComponent implements AfterViewInit, OnDestroy {
   @ViewChild('chart') chartDom!: ElementRef<HTMLDivElement>
 
   constructor(private zone: NgZone) {}

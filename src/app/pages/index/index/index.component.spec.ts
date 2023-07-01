@@ -1,6 +1,11 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing'
+import { provideRouter } from '@angular/router'
+import { provideAnimations } from '@angular/platform-browser/animations'
 
-import { IndexComponent } from './index.component'
+import { NzIconModule } from 'ng-zorro-antd/icon'
+import { UserOutline, DashboardOutline, ShopOutline } from '@ant-design/icons-angular/icons'
+
+import IndexComponent from './index.component'
 
 describe('IndexComponent', () => {
   let component: IndexComponent
@@ -8,7 +13,8 @@ describe('IndexComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [IndexComponent]
+      imports: [NzIconModule.forRoot([UserOutline, DashboardOutline, ShopOutline])],
+      providers: [provideRouter([]), provideAnimations()]
     })
     fixture = TestBed.createComponent(IndexComponent)
     component = fixture.componentInstance

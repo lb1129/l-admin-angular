@@ -3,6 +3,7 @@ import { Component } from '@angular/core'
 @Component({
   selector: 'app-index',
   templateUrl: './index.component.html',
-  styleUrls: ['./index.component.less']
+  styleUrls: ['./index.component.less'],
+  standalone: true
 })
-export class IndexComponent {}
+export default class IndexComponent {}
