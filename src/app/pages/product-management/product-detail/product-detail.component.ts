@@ -1,12 +1,13 @@
-import { Component } from '@angular/core'
-import { Router } from '@angular/router'
+import { Component, OnInit } from '@angular/core'
+import { Router, ActivatedRoute } from '@angular/router'
 import { Location } from '@angular/common'
 import { NzPageHeaderModule } from 'ng-zorro-antd/page-header'
 import { NzDescriptionsModule } from 'ng-zorro-antd/descriptions'
 import { NzSkeletonModule } from 'ng-zorro-antd/skeleton'
 import { NzButtonModule } from 'ng-zorro-antd/button'
 
-import { ProductType } from '../types'
+import type { ProductType } from '../types'
+import { ProductService } from '../services'
 
 @Component({
   imports: [NzPageHeaderModule, NzDescriptionsModule, NzSkeletonModule, NzButtonModule],
@@ -15,23 +16,51 @@ import { ProductType } from '../types'
   styleUrls: ['./product-detail.component.less'],
   standalone: true
 })
-export default class ProductDetailComponent {
-  constructor(private router: Router, private location: Location) {}
+export default class ProductDetailComponent implements OnInit {
+  constructor(
+    private router: Router,
+    private location: Location,
+    private route: ActivatedRoute,
+    private productService: ProductService
+  ) {}
   details: ProductType = {
-    id: '1',
-    name: 'AppleMacBook Air',
-    brand: 'Apple',
-    category: '电脑整机/笔记本',
-    price: 7199.0,
-    color: '深空灰色',
-    style: '13.3英寸 M1芯片 8+7核 8G+256G',
+    id: '',
+    name: '',
+    brand: '',
+    category: '',
+    price: 0,
+    color: '',
+    style: '',
     enable: true,
-    inventory: 33,
+    inventory: 0,
     describe: ''
   }
+  loading = false
+
+  loadData() {
+    const id = this.route.snapshot.paramMap.get('id')
+    if (id) {
+      this.loading = true
+      this.productService.getProductById(id).subscribe({
+        next: (res) => {
+          this.details = res.data
+          this.loading = false
+        },
+        error: () => {
+          this.loading = false
+        }
+      })
+    }
+  }
+
+  ngOnInit() {
+    this.loadData()
+  }
+
   backHandler() {
     this.location.back()
   }
+
   editHandler() {
     this.router.navigate(['/productManagement/productAddOrEdit/', this.details.id])
   }

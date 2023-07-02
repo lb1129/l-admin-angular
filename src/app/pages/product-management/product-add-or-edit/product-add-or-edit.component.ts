@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core'
 import { Location } from '@angular/common'
+import { ActivatedRoute } from '@angular/router'
 import {
   UntypedFormBuilder,
   UntypedFormGroup,
@@ -15,6 +16,9 @@ import { NzInputModule } from 'ng-zorro-antd/input'
 import { NzInputNumberModule } from 'ng-zorro-antd/input-number'
 import { NzFormModule } from 'ng-zorro-antd/form'
 import { NzCheckboxModule } from 'ng-zorro-antd/checkbox'
+import { NzMessageService } from 'ng-zorro-antd/message'
+
+import { ProductService } from '../services'
 
 @Component({
   imports: [
@@ -35,8 +39,17 @@ import { NzCheckboxModule } from 'ng-zorro-antd/checkbox'
 })
 export default class ProductAddOrEditComponent implements OnInit {
   form!: UntypedFormGroup
+  loading = false
+  id = ''
+  submitLoading = false
 
-  constructor(private location: Location, private fb: UntypedFormBuilder) {}
+  constructor(
+    private location: Location,
+    private fb: UntypedFormBuilder,
+    private route: ActivatedRoute,
+    private productService: ProductService,
+    private message: NzMessageService
+  ) {}
 
   ngOnInit(): void {
     this.form = this.fb.group({
@@ -50,6 +63,31 @@ export default class ProductAddOrEditComponent implements OnInit {
       enable: [true],
       describe: ['']
     })
+    this.id = this.route.snapshot.paramMap.get('id') ?? ''
+    if (this.id) {
+      this.loading = true
+      this.productService.getProductById(this.id).subscribe({
+        next: (res) => {
+          const { name, brand, category, price, color, inventory, style, enable, describe } =
+            res.data
+          this.form.setValue({
+            name,
+            brand,
+            category,
+            price,
+            color,
+            inventory,
+            style,
+            enable,
+            describe
+          })
+          this.loading = false
+        },
+        error: () => {
+          this.loading = false
+        }
+      })
+    }
   }
 
   backHandler() {
@@ -58,8 +96,19 @@ export default class ProductAddOrEditComponent implements OnInit {
 
   saveHandler() {
     if (this.form.valid) {
-      // const value = this.form.value
-      this.location.back()
+      const value = this.form.value
+      this.submitLoading = true
+      if (this.id) value.id = this.id
+      this.productService.saveProduct(value).subscribe({
+        next: () => {
+          this.submitLoading = false
+          this.message.success('保存成功')
+          this.location.back()
+        },
+        error: () => {
+          this.submitLoading = false
+        }
+      })
     } else {
       Object.values(this.form.controls).forEach((control) => {
         if (control.invalid) {

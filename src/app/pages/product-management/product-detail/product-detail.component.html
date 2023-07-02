@@ -3,7 +3,7 @@
     <button nz-button nzType="primary" (click)="editHandler()">编辑</button>
   </nz-page-header-extra>
   <nz-page-header-content>
-    <nz-skeleton [nzLoading]="false">
+    <nz-skeleton [nzLoading]="loading">
       <nz-descriptions nzBordered>
         <nz-descriptions-item nzTitle="name">{{ details.name }}</nz-descriptions-item>
         <nz-descriptions-item nzTitle="brand">{{ details.brand }}</nz-descriptions-item>

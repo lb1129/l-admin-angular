@@ -3,7 +3,7 @@
     <div class="index-header-logo">
       <a href="/">
         <img [src]="logoSvg" alt="logo" />
-        l-admin-angular
+        {{ systemName }}
       </a>
     </div>
     <div class="index-header-center"></div>
@@ -14,13 +14,13 @@
         class="index-header-right-item index-header-right-item_user"
       >
         <nz-avatar nzSize="small" nzSrc="../../../../assets/image/user.png" />
-        <span style="margin-left: 8px">viho</span>
+        <span style="margin-left: 8px">{{ userInfoStore.data.userName }}</span>
       </span>
       <nz-dropdown-menu #menu>
         <ul nz-menu nzSelectable>
-          <li nz-menu-item>个人中心</li>
+          <li nz-menu-item routerLink="/personalCenter">个人中心</li>
           <li nz-menu-divider></li>
-          <li nz-menu-item>退出登录</li>
+          <li nz-menu-item (click)="logout()">退出登录</li>
         </ul>
       </nz-dropdown-menu>
     </div>

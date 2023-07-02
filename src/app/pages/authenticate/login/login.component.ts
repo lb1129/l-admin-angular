@@ -1,5 +1,5 @@
 import { Component } from '@angular/core'
-import { RouterModule } from '@angular/router'
+import { RouterModule, Router } from '@angular/router'
 import {
   UntypedFormBuilder,
   UntypedFormGroup,
@@ -9,7 +9,15 @@ import {
 import { NzFormModule } from 'ng-zorro-antd/form'
 import { NzInputModule } from 'ng-zorro-antd/input'
 import { NzButtonModule } from 'ng-zorro-antd/button'
+import { NzNotificationModule, NzNotificationService } from 'ng-zorro-antd/notification'
 import LayoutComponent from '../layout/layout.component'
+
+import { AuthenticateService } from '../services'
+import { PersonalCenterService } from '@/app/pages/personal-center/service'
+import { MenuStore } from '@/app/stores/menu'
+import { UserInfoStore } from '@/app/stores/userInfo'
+
+import { tokenLocalforage } from '@/app/storage/localforage'
 
 @Component({
   imports: [
@@ -18,6 +26,7 @@ import LayoutComponent from '../layout/layout.component'
     NzFormModule,
     NzInputModule,
     NzButtonModule,
+    NzNotificationModule,
     LayoutComponent
   ],
   selector: 'app-login',
@@ -27,8 +36,17 @@ import LayoutComponent from '../layout/layout.component'
 })
 export default class LoginComponent {
   form!: UntypedFormGroup
+  loading = false
 
-  constructor(private fb: UntypedFormBuilder) {
+  constructor(
+    private fb: UntypedFormBuilder,
+    private authenticateService: AuthenticateService,
+    private personalCenterService: PersonalCenterService,
+    private router: Router,
+    private notification: NzNotificationService,
+    private menuStore: MenuStore,
+    private userInfoStore: UserInfoStore
+  ) {
     this.form = this.fb.group({
       userName: ['', Validators.required],
       password: ['', Validators.required]
@@ -37,8 +55,33 @@ export default class LoginComponent {
 
   submitHandler() {
     if (this.form.valid) {
+      this.loading = true
       const value = this.form.value
-      console.log(value)
+      this.authenticateService.login(value).subscribe({
+        next: async (res) => {
+          await tokenLocalforage.set(res.data)
+          // 获取菜单
+          this.personalCenterService.getMenu().subscribe((menuRes) => {
+            // 更新 menuStore store
+            this.menuStore.setData(menuRes.data)
+            // 获取用户信息
+            this.personalCenterService.getUserInfo().subscribe((userInfoRes) => {
+              // 更新 userInfo store
+              this.userInfoStore.setData(userInfoRes.data)
+              // 跳转首页
+              this.router.navigate([''])
+              setTimeout(() => {
+                // 欢迎提示
+                this.notification.success('欢迎回来', userInfoRes.data.userName)
+              }, 200)
+              this.loading = false
+            })
+          })
+        },
+        error: () => {
+          this.loading = false
+        }
+      })
     } else {
       Object.values(this.form.controls).forEach((control) => {
         if (control.invalid) {

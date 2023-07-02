@@ -1,13 +1,16 @@
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild, OnDestroy } from '@angular/core'
+import { AfterViewInit, Component, ElementRef, ViewChild, OnDestroy } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { Router, RouterModule } from '@angular/router'
-import { NzTableModule } from 'ng-zorro-antd/table'
+import { NzTableModule, NzTableQueryParams } from 'ng-zorro-antd/table'
 import { NzButtonModule } from 'ng-zorro-antd/button'
 import { NzDividerModule } from 'ng-zorro-antd/divider'
 import { NzInputModule } from 'ng-zorro-antd/input'
 import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm'
 import { NzIconModule } from 'ng-zorro-antd/icon'
-import { ProductType } from '../types'
+import { NzMessageService } from 'ng-zorro-antd/message'
+
+import type { ProductType } from '../types'
+import { ProductService } from '../services'
 
 interface Column {
   title: string
@@ -34,16 +37,25 @@ interface Column {
   styleUrls: ['./product-list.component.less'],
   standalone: true
 })
-export default class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
+export default class ProductListComponent implements AfterViewInit, OnDestroy {
   @ViewChild('wrapRef') wrapRef!: ElementRef<HTMLDivElement>
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private productService: ProductService,
+    private message: NzMessageService
+  ) {}
 
   allChecked = false
-  loading = false
   indeterminate = false
-  listOfData: readonly ProductType[] = []
   setOfCheckedId = new Set<string>()
+  y = '0px'
+  loading = true
+  keyword = ''
+  pageIndex = 1
+  pageSize = 10
+  total = 0
+  dataSource: ProductType[] = []
   columns: Column[] = [
     {
       title: '名称',
@@ -94,7 +106,6 @@ export default class ProductListComponent implements OnInit, AfterViewInit, OnDe
       width: '150px'
     }
   ]
-  y = '0px'
   ro!: ResizeObserver
 
   addHandler() {
@@ -103,7 +114,17 @@ export default class ProductListComponent implements OnInit, AfterViewInit, OnDe
 
   deleteHandler(id?: string) {
     const ids = id ? [id] : [...this.setOfCheckedId]
-    console.log(ids)
+    this.loading = true
+    this.productService.deleteProductByIds(ids).subscribe({
+      next: () => {
+        this.message.success('删除成功')
+        this.loading = false
+        this.loadData()
+      },
+      error: () => {
+        this.loading = false
+      }
+    })
   }
 
   updateCheckedSet(id: string, checked: boolean): void {
@@ -115,9 +136,9 @@ export default class ProductListComponent implements OnInit, AfterViewInit, OnDe
   }
 
   refreshCheckedStatus(): void {
-    this.allChecked = this.listOfData.every(({ id }) => this.setOfCheckedId.has(id))
+    this.allChecked = this.dataSource.every(({ id }) => this.setOfCheckedId.has(id))
     this.indeterminate =
-      this.listOfData.some(({ id }) => this.setOfCheckedId.has(id)) && !this.allChecked
+      this.dataSource.some(({ id }) => this.setOfCheckedId.has(id)) && !this.allChecked
   }
 
   onItemChecked(id: string, checked: boolean): void {
@@ -126,157 +147,49 @@ export default class ProductListComponent implements OnInit, AfterViewInit, OnDe
   }
 
   onAllChecked(checked: boolean): void {
-    this.listOfData.forEach(({ id }) => this.updateCheckedSet(id, checked))
+    this.dataSource.forEach(({ id }) => this.updateCheckedSet(id, checked))
     this.refreshCheckedStatus()
   }
 
-  ngOnInit() {
-    this.listOfData = [
-      {
-        id: '1',
-        name: 'AppleMacBook Air',
-        brand: 'Apple',
-        category: '电脑整机/笔记本',
-        price: 7199.0,
-        color: '深空灰色',
-        style: '13.3英寸 M1芯片 8+7核 8G+256G',
-        enable: true,
-        inventory: 33,
-        describe: ''
-      },
-      {
-        id: '2',
-        name: 'AppleMacBook Air',
-        brand: 'Apple',
-        category: '电脑整机/笔记本',
-        price: 9499.0,
-        color: '深空灰色',
-        style: '13.3英寸 M1芯片 8+7核 8G+512G',
-        enable: true,
-        inventory: 0,
-        describe: ''
-      },
-      {
-        id: '3',
-        name: 'AppleMacBook Air',
-        brand: 'Apple',
-        category: '电脑整机/笔记本',
-        price: 9499.0,
-        color: '深空灰色',
-        style: '13.3英寸 M1芯片 8+7核 16G+256G',
-        enable: true,
-        inventory: 0,
-        describe: ''
-      },
-      {
-        id: '4',
-        name: 'AppleMacBook Air',
-        brand: 'Apple',
-        category: '电脑整机/笔记本',
-        price: 10999.0,
-        color: '深空灰色',
-        style: '13.3英寸 M1芯片 8+7核 16G+512G',
-        enable: true,
-        inventory: 0,
-        describe: ''
-      },
-      {
-        id: '5',
-        name: 'AppleMacBook Air',
-        brand: 'Apple',
-        category: '电脑整机/笔记本',
-        price: 7199.0,
-        color: '银色',
-        style: '13.3英寸 M1芯片 8+7核 8G+256G',
-        enable: true,
-        inventory: 33,
-        describe: ''
-      },
-      {
-        id: '6',
-        name: 'AppleMacBook Air',
-        brand: 'Apple',
-        category: '电脑整机/笔记本',
-        price: 9499.0,
-        color: '银色',
-        style: '13.3英寸 M1芯片 8+7核 8G+512G',
-        enable: true,
-        inventory: 0,
-        describe: ''
-      },
-      {
-        id: '7',
-        name: 'AppleMacBook Air',
-        brand: 'Apple',
-        category: '电脑整机/笔记本',
-        price: 9499.0,
-        color: '银色',
-        style: '13.3英寸 M1芯片 8+7核 16G+256G',
-        enable: true,
-        inventory: 0,
-        describe: ''
-      },
-      {
-        id: '8',
-        name: 'AppleMacBook Air',
-        brand: 'Apple',
-        category: '电脑整机/笔记本',
-        price: 10999.0,
-        color: '银色',
-        style: '13.3英寸 M1芯片 8+7核 16G+512G',
-        enable: true,
-        inventory: 0,
-        describe: ''
-      },
-      {
-        id: '9',
-        name: 'AppleMacBook Air',
-        brand: 'Apple',
-        category: '电脑整机/笔记本',
-        price: 7199.0,
-        color: '金色',
-        style: '13.3英寸 M1芯片 8+7核 8G+256G',
-        enable: true,
-        inventory: 33,
-        describe: ''
-      },
-      {
-        id: '10',
-        name: 'AppleMacBook Air',
-        brand: 'Apple',
-        category: '电脑整机/笔记本',
-        price: 9499.0,
-        color: '金色',
-        style: '13.3英寸 M1芯片 8+7核 8G+512G',
-        enable: true,
-        inventory: 0,
-        describe: ''
-      },
-      {
-        id: '11',
-        name: 'AppleMacBook Air',
-        brand: 'Apple',
-        category: '电脑整机/笔记本',
-        price: 9499.0,
-        color: '金色',
-        style: '13.3英寸 M1芯片 8+7核 16G+256G',
-        enable: true,
-        inventory: 0,
-        describe: ''
-      },
-      {
-        id: '12',
-        name: 'AppleMacBook Air',
-        brand: 'Apple',
-        category: '电脑整机/笔记本',
-        price: 10999.0,
-        color: '金色',
-        style: '13.3英寸 M1芯片 8+7核 16G+512G',
-        enable: true,
-        inventory: 0,
-        describe: ''
-      }
-    ]
+  searchHadnler(value: string) {
+    if (this.keyword !== value) {
+      this.keyword = value
+      this.loadData()
+    }
+  }
+
+  loadData() {
+    this.loading = true
+    this.productService
+      .getProducts({
+        pagination: {
+          pageNo: this.pageIndex,
+          pageSize: this.pageSize
+        },
+        keyword: this.keyword
+      })
+      .subscribe({
+        next: (res) => {
+          this.dataSource = res.data.data
+          this.total = res.data.total
+          this.refreshCheckedStatus()
+          this.loading = false
+        },
+        error: () => {
+          this.loading = false
+        }
+      })
+  }
+
+  queryParamsHandler(params: NzTableQueryParams) {
+    const {
+      pageSize,
+      pageIndex
+      // sort, filter
+    } = params
+    this.pageIndex = pageIndex
+    this.pageSize = pageSize
+    this.loadData()
   }
 
   ngAfterViewInit() {

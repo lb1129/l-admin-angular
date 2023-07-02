@@ -23,6 +23,6 @@
       <a routerLink="/register">注册账号</a>
       <a routerLink="/findPassword" style="float: right">忘记密码</a>
     </nz-form-item>
-    <button nz-button nzType="primary" nzBlock nzSize="large">登录</button>
+    <button nz-button nzType="primary" nzBlock nzSize="large" [nzLoading]="loading">登录</button>
   </form>
 </app-layout>
