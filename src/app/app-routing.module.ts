@@ -23,7 +23,11 @@ const routes: Routes = [
               import('./pages/product-management/product-detail/product-detail.component')
           },
           {
-            path: 'productAddOrEdit/:id?',
+            path: 'productAddOrEdit',
+            redirectTo: 'productAddOrEdit/'
+          },
+          {
+            path: 'productAddOrEdit/:id',
             loadComponent: () =>
               import('./pages/product-management/product-add-or-edit/product-add-or-edit.component')
           }
