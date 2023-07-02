@@ -1,4 +1,4 @@
-<div class="position-map" #wrapRef>
+<div class="position-map" appResize (appResizeChange)="resizeChangeHandler($event)">
   <div class="position-map-content" #nodeRef></div>
   <input type="text" placeholder="搜索位置" class="position-map-search-input" #suggestRef />
   <div class="position-map-search-result" #resultRef></div>

@@ -5,9 +5,9 @@ import {
   ViewChild,
   EventEmitter,
   Output,
-  NgZone,
-  OnDestroy
+  NgZone
 } from '@angular/core'
+import { ResizeDirective, type ResizeChangeRes } from '@/app/shared/utils/resize.directive'
 
 export interface PositionInfo {
   province: string
@@ -20,13 +20,13 @@ export interface PositionInfo {
 }
 
 @Component({
+  imports: [ResizeDirective],
   selector: 'app-position-map',
   templateUrl: './position-map.component.html',
   styleUrls: ['./position-map.component.less'],
   standalone: true
 })
-export default class PositionMapComponent implements AfterViewInit, OnDestroy {
-  @ViewChild('wrapRef') wrapRef!: ElementRef<HTMLDivElement>
+export default class PositionMapComponent implements AfterViewInit {
   @ViewChild('nodeRef') nodeRef!: ElementRef<HTMLDivElement>
   @ViewChild('suggestRef') suggestRef!: ElementRef<HTMLInputElement>
   @ViewChild('resultRef') resultRef!: ElementRef<HTMLDivElement>
@@ -36,17 +36,15 @@ export default class PositionMapComponent implements AfterViewInit, OnDestroy {
   constructor(private zone: NgZone) {}
 
   suggestionRef!: HTMLElement | null
-  ro!: ResizeObserver
+
+  resizeChangeHandler(params: ResizeChangeRes) {
+    const height = `${params.height - 200}px`
+    if (this.suggestionRef) this.suggestionRef.style.height = height
+    this.resultRef.nativeElement.style.height = height
+  }
 
   ngAfterViewInit(): void {
     this.zone.runOutsideAngular(() => {
-      this.ro = new ResizeObserver((entries) => {
-        const height = `${entries[0].contentRect.height - 200}px`
-        if (this.suggestionRef) this.suggestionRef.style.height = height
-        this.resultRef.nativeElement.style.height = height
-      })
-      this.ro.observe(this.wrapRef.nativeElement)
-
       const localcity = new BMapGL.LocalCity()
       localcity.get((e) => {
         const map = new BMapGL.Map(this.nodeRef.nativeElement)
@@ -113,9 +111,5 @@ export default class PositionMapComponent implements AfterViewInit, OnDestroy {
         }, 200)
       })
     })
-  }
-
-  ngOnDestroy(): void {
-    this.ro.unobserve(this.wrapRef.nativeElement)
   }
 }

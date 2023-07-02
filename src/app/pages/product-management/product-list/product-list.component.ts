@@ -12,6 +12,8 @@ import { NzMessageService } from 'ng-zorro-antd/message'
 import type { ProductType } from '../types'
 import { ProductService } from '../services'
 
+import { ResizeDirective, type ResizeChangeRes } from '@/app/shared/utils/resize.directive'
+
 interface Column {
   title: string
   dataIndex: keyof ProductType
@@ -30,16 +32,15 @@ interface Column {
     NzDividerModule,
     NzInputModule,
     NzPopconfirmModule,
-    NzIconModule
+    NzIconModule,
+    ResizeDirective
   ],
   selector: 'app-product-list',
   templateUrl: './product-list.component.html',
   styleUrls: ['./product-list.component.less'],
   standalone: true
 })
-export default class ProductListComponent implements AfterViewInit, OnDestroy {
-  @ViewChild('wrapRef') wrapRef!: ElementRef<HTMLDivElement>
-
+export default class ProductListComponent {
   constructor(
     private router: Router,
     private productService: ProductService,
@@ -106,10 +107,13 @@ export default class ProductListComponent implements AfterViewInit, OnDestroy {
       width: '150px'
     }
   ]
-  ro!: ResizeObserver
 
   addHandler() {
     this.router.navigate(['/productManagement/productAddOrEdit'])
+  }
+
+  resizeChangeHandler(params: ResizeChangeRes) {
+    this.y = `${params.height - (64.8 + 64 + 54.8)}px`
   }
 
   deleteHandler(id?: string) {
@@ -190,16 +194,5 @@ export default class ProductListComponent implements AfterViewInit, OnDestroy {
     this.pageIndex = pageIndex
     this.pageSize = pageSize
     this.loadData()
-  }
-
-  ngAfterViewInit() {
-    this.ro = new ResizeObserver((entries) => {
-      this.y = `${entries[0].contentRect.height - (64.8 + 64 + 54.8)}px`
-    })
-    this.ro.observe(this.wrapRef.nativeElement)
-  }
-
-  ngOnDestroy() {
-    this.ro.unobserve(this.wrapRef.nativeElement)
   }
 }

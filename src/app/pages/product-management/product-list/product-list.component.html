@@ -29,7 +29,7 @@
     </ng-template>
   </div>
 </ng-template>
-<div style="height: 100%" #wrapRef>
+<div style="height: 100%" appResize (appResizeChange)="resizeChangeHandler($event)">
   <nz-table
     #table
     nzBordered
