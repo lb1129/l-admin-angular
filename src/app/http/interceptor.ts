@@ -1,15 +1,22 @@
 import { Injectable } from '@angular/core'
 import { HttpInterceptor, HttpHandler, HttpRequest, HttpResponse } from '@angular/common/http'
+import { Router } from '@angular/router'
 import { environment } from '@/environments/environment'
 import queryString from 'query-string'
 import { catchError, map, switchMap } from 'rxjs/operators'
 import { NzMessageService } from 'ng-zorro-antd/message'
 import { tokenLocalforage } from '@/app/storage/localforage'
-import { Observable, delay } from 'rxjs'
+import { Observable, ReplaySubject, delay } from 'rxjs'
+import isAuthenticated from '@/app/auth/isAuthenticated'
+import { RouteSnapshot } from '@/app/stores/routeSnapshot'
 
 @Injectable()
 export class Interceptor implements HttpInterceptor {
-  constructor(private message: NzMessageService) {}
+  constructor(
+    private message: NzMessageService,
+    private router: Router,
+    private routeSnapshot: RouteSnapshot
+  ) {}
 
   // 支持异步处理req
   handleReq(req: HttpRequest<any>) {
@@ -60,9 +67,15 @@ export class Interceptor implements HttpInterceptor {
         return event
       }),
       // 错误处理
-      catchError((error) => {
+      catchError(async (error) => {
         if (error.status === 401) {
-          // TODO
+          if (this.routeSnapshot.data.data['needAuth'] === true) {
+            await tokenLocalforage.clear()
+            const subject = new ReplaySubject<boolean>(1)
+            isAuthenticated.value = subject
+            subject.next(false)
+            this.router.navigate(['login'], { replaceUrl: true })
+          }
         } else {
           this.message.error(error.body ? error.body.message : error.message)
         }
