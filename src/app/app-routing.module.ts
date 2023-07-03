@@ -7,6 +7,7 @@ const routes: Routes = [
   {
     path: '',
     canActivate: [authGuard],
+    canActivateChild: [authGuard],
     loadComponent: () => import('./pages/index/index/index.component'),
     data: { needAuth: true },
     children: [
