@@ -1,6 +1,13 @@
 <nz-page-header (nzBack)="backHandler()" nzBackIcon nzTitle="详情">
   <nz-page-header-extra>
-    <button nz-button nzType="primary" (click)="editHandler()">编辑</button>
+    <button
+      nz-button
+      nzType="primary"
+      [disabled]="auth.operateAuthValueToDisabled(auth.operateAuth.edit)"
+      (click)="editHandler()"
+    >
+      编辑
+    </button>
   </nz-page-header-extra>
   <nz-page-header-content>
     <nz-skeleton [nzLoading]="loading">

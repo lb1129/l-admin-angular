@@ -1,10 +1,19 @@
 <ng-template #totalTemplate let-total>共 {{ total }} 条</ng-template>
 <ng-template #tableHeader>
   <nz-button-group>
-    <button nz-button nzType="primary" (click)="addHandler()">新增</button>
     <button
       nz-button
-      [disabled]="setOfCheckedId.size <= 0"
+      nzType="primary"
+      (click)="addHandler()"
+      [disabled]="auth.operateAuthValueToDisabled(auth.operateAuth.add)"
+    >
+      新增
+    </button>
+    <button
+      nz-button
+      [disabled]="
+        setOfCheckedId.size <= 0 || auth.operateAuthValueToDisabled(auth.operateAuth.delete)
+      "
       nz-popconfirm
       nzPopconfirmTitle="确定删除吗？"
       (nzOnConfirm)="deleteHandler()"
@@ -86,6 +95,7 @@
             <a
               nz-button
               nzType="link"
+              [disabled]="auth.operateAuthValueToDisabled(auth.operateAuth.detail)"
               style="padding: 0"
               [routerLink]="['/productManagement/productDetail/', data.id]"
               >{{ data[column.dataIndex] }}</a
@@ -97,6 +107,7 @@
           <a
             nz-button
             nzType="link"
+            [disabled]="auth.operateAuthValueToDisabled(auth.operateAuth.edit)"
             [routerLink]="['/productManagement/productAddOrEdit/', data.id]"
             >编辑</a
           >
@@ -104,6 +115,7 @@
           <a
             nz-button
             nzType="link"
+            [disabled]="auth.operateAuthValueToDisabled(auth.operateAuth.delete)"
             nz-popconfirm
             nzPopconfirmTitle="确定删除吗？"
             (nzOnConfirm)="deleteHandler(data.id)"

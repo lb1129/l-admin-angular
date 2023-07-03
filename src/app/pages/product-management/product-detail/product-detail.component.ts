@@ -9,6 +9,8 @@ import { NzButtonModule } from 'ng-zorro-antd/button'
 import type { ProductType } from '../types'
 import { ProductService } from '../services'
 
+import { Auth } from '@/app/auth/auth'
+
 @Component({
   imports: [NzPageHeaderModule, NzDescriptionsModule, NzSkeletonModule, NzButtonModule],
   selector: 'app-product-detail',
@@ -21,7 +23,8 @@ export default class ProductDetailComponent implements OnInit {
     private router: Router,
     private location: Location,
     private route: ActivatedRoute,
-    private productService: ProductService
+    private productService: ProductService,
+    public auth: Auth
   ) {}
   details: ProductType = {
     id: '',
@@ -54,6 +57,7 @@ export default class ProductDetailComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.auth.init()
     this.loadData()
   }
 

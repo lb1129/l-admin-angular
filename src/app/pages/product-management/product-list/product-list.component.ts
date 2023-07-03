@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, ViewChild, OnDestroy } from '@angular/core'
+import { Component, OnInit } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { Router, RouterModule } from '@angular/router'
 import { NzTableModule, NzTableQueryParams } from 'ng-zorro-antd/table'
@@ -13,6 +13,8 @@ import type { ProductType } from '../types'
 import { ProductService } from '../services'
 
 import { ResizeDirective, type ResizeChangeRes } from '@/app/shared/utils/resize.directive'
+
+import { Auth } from '@/app/auth/auth'
 
 interface Column {
   title: string
@@ -40,11 +42,12 @@ interface Column {
   styleUrls: ['./product-list.component.less'],
   standalone: true
 })
-export default class ProductListComponent {
+export default class ProductListComponent implements OnInit {
   constructor(
     private router: Router,
     private productService: ProductService,
-    private message: NzMessageService
+    private message: NzMessageService,
+    public auth: Auth
   ) {}
 
   allChecked = false
@@ -107,6 +110,10 @@ export default class ProductListComponent {
       width: '150px'
     }
   ]
+
+  ngOnInit(): void {
+    this.auth.init()
+  }
 
   addHandler() {
     this.router.navigate(['/productManagement/productAddOrEdit'])
