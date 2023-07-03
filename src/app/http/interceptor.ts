@@ -8,14 +8,14 @@ import { NzMessageService } from 'ng-zorro-antd/message'
 import { tokenLocalforage } from '@/app/storage/localforage'
 import { Observable, ReplaySubject, delay } from 'rxjs'
 import isAuthenticated from '@/app/auth/isAuthenticated'
-import { RouteSnapshot } from '@/app/stores/routeSnapshot'
+import { RouteSnapshotStore } from '@/app/stores/routeSnapshot'
 
 @Injectable()
 export class Interceptor implements HttpInterceptor {
   constructor(
     private message: NzMessageService,
     private router: Router,
-    private routeSnapshot: RouteSnapshot
+    private routeSnapshotStore: RouteSnapshotStore
   ) {}
 
   // 支持异步处理req
@@ -69,7 +69,7 @@ export class Interceptor implements HttpInterceptor {
       // 错误处理
       catchError(async (error) => {
         if (error.status === 401) {
-          if (this.routeSnapshot.data.data['needAuth'] === true) {
+          if (this.routeSnapshotStore.data.data['needAuth'] === true) {
             await tokenLocalforage.clear()
             const subject = new ReplaySubject<boolean>(1)
             isAuthenticated.value = subject

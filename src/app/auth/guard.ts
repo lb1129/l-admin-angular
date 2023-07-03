@@ -2,14 +2,14 @@ import { inject } from '@angular/core'
 import { ActivatedRouteSnapshot, Router } from '@angular/router'
 import isAuthenticated from '@/app/auth/isAuthenticated'
 import { map } from 'rxjs'
-import { RouteSnapshot } from '@/app/stores/routeSnapshot'
+import { RouteSnapshotStore } from '@/app/stores/routeSnapshot'
 
 // 是否已登录跳转控制
 export const authGuard = (route: ActivatedRouteSnapshot) => {
   const router = inject(Router)
-  const routeSnapshot = inject(RouteSnapshot)
+  const routeSnapshotStore = inject(RouteSnapshotStore)
   // 更新 routeSnapshot store
-  routeSnapshot.setData(route)
+  routeSnapshotStore.setData(route)
   return isAuthenticated.value.pipe(
     map((val) => {
       if (val) {
