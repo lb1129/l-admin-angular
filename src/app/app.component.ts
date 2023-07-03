@@ -23,7 +23,7 @@ export class AppComponent implements OnInit {
       next: () => {
         // 获取菜单
         this.personalCenterService.getMenu().subscribe((menuRes) => {
-          // 更新 menuStore store
+          // 更新 menu store
           this.menuStore.setData(menuRes.data)
           // 获取用户信息
           this.personalCenterService.getUserInfo().subscribe((userInfoRes) => {

@@ -62,7 +62,7 @@ export default class LoginComponent {
           await tokenLocalforage.set(res.data)
           // 获取菜单
           this.personalCenterService.getMenu().subscribe((menuRes) => {
-            // 更新 menuStore store
+            // 更新 menu store
             this.menuStore.setData(menuRes.data)
             // 获取用户信息
             this.personalCenterService.getUserInfo().subscribe((userInfoRes) => {
