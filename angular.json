@@ -33,7 +33,8 @@
               }
             ],
             "styles": ["src/styles.less"],
-            "scripts": []
+            "scripts": [],
+            "allowedCommonJsDependencies": ["mockjs", "localforage"]
           },
           "configurations": {
             "production": {
