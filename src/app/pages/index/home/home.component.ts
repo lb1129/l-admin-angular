@@ -1,7 +1,8 @@
-import { AfterViewInit, Component, ElementRef, ViewChild, NgZone, OnDestroy } from '@angular/core'
+import { AfterViewInit, Component, ElementRef, ViewChild, NgZone } from '@angular/core'
 import PositionMapComponent, {
   type PositionInfo
 } from '@/app/shared/position-map/position-map.component'
+import { ResizeDirective } from '@/app/shared/utils/resize.directive'
 import * as echarts from 'echarts/core'
 import { GridComponent, TooltipComponent } from 'echarts/components'
 import { BarChart } from 'echarts/charts'
@@ -10,24 +11,23 @@ import { CanvasRenderer } from 'echarts/renderers'
 echarts.use([GridComponent, TooltipComponent, BarChart, CanvasRenderer])
 
 @Component({
-  imports: [PositionMapComponent],
+  imports: [PositionMapComponent, ResizeDirective],
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.less'],
   standalone: true
 })
-export default class HomeComponent implements AfterViewInit, OnDestroy {
+export default class HomeComponent implements AfterViewInit {
   @ViewChild('chart') chartDom!: ElementRef<HTMLDivElement>
 
   constructor(private zone: NgZone) {}
-
-  ro!: ResizeObserver
+  myChart!: echarts.ECharts
 
   ngAfterViewInit() {
     this.zone.runOutsideAngular(() => {
-      const myChart = echarts.init(this.chartDom.nativeElement)
+      this.myChart = echarts.init(this.chartDom.nativeElement)
       // 绘制图表
-      myChart.setOption({
+      this.myChart.setOption({
         tooltip: {
           trigger: 'axis',
           axisPointer: {
@@ -63,11 +63,6 @@ export default class HomeComponent implements AfterViewInit, OnDestroy {
           }
         ]
       })
-      // resize 处理
-      this.ro = new ResizeObserver(() => {
-        myChart.resize()
-      })
-      this.ro.observe(this.chartDom.nativeElement)
     })
   }
 
@@ -75,7 +70,7 @@ export default class HomeComponent implements AfterViewInit, OnDestroy {
     console.log(res)
   }
 
-  ngOnDestroy() {
-    this.ro.unobserve(this.chartDom.nativeElement)
+  resizeChangeHandler() {
+    if (this.myChart) this.myChart.resize()
   }
 }
