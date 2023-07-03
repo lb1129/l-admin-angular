@@ -50,13 +50,11 @@ export class Interceptor implements HttpInterceptor {
             if (event.body.status >= 200 && event.body.status < 300) {
               return event.clone({ body: event.body.data })
             } else {
-              // 401 未登录
-              if (event.body.status === 401) {
-                // TODO
-              }
               // 抛出错误 走catchError
-              throw event.clone({ body: event.body.data })
+              throw event.clone({ body: event.body.data, status: event.body.status })
             }
+          } else {
+            return event.clone({ body: event.body.data })
           }
         }
         return event
