@@ -69,7 +69,7 @@ export default class LoginComponent {
               // 更新 userInfo store
               this.userInfoStore.setData(userInfoRes.data)
               // 跳转首页
-              this.router.navigate([''])
+              this.router.navigate([''], { replaceUrl: true })
               setTimeout(() => {
                 // 欢迎提示
                 this.notification.success('欢迎回来', userInfoRes.data.userName)

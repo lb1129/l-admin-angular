@@ -62,7 +62,7 @@ export default class IndexComponent {
           next: () => {
             tokenLocalforage.clear()
             this.message.remove(messageRef.messageId)
-            this.router.navigate(['login'])
+            this.router.navigate(['login'], { replaceUrl: true })
           },
           error: () => {
             this.message.remove(messageRef.messageId)
