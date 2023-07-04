@@ -49,13 +49,35 @@
               <a routerLink="/">首页</a>
             </span>
           </li>
-          <li nz-submenu nzOpen nzTitle="产品管理" nzIcon="shop">
-            <ul>
-              <li nz-menu-item nzMatchRouter nzMatchRouterExact>
-                <a routerLink="/productManagement/productList">产品列表</a>
+
+          <ng-container *ngTemplateOutlet="menuTpl; context: { $implicit: menus }"></ng-container>
+          <ng-template #menuTpl let-menus>
+            <ng-container *ngFor="let menu of menus">
+              <li
+                *ngIf="!menu.children"
+                nz-menu-item
+                [nzPaddingLeft]="menu.level * 24"
+                nzMatchRouter
+                nzMatchRouterExact
+              >
+                <a [routerLink]="menu.path">{{ menu.title }}</a>
               </li>
-            </ul>
-          </li>
+              <li
+                *ngIf="menu.children"
+                nz-submenu
+                [nzPaddingLeft]="menu.level * 24"
+                [nzTitle]="menu.title"
+                [nzIcon]="menu.icon"
+              >
+                <ul>
+                  <ng-container
+                    *ngTemplateOutlet="menuTpl; context: { $implicit: menu.children }"
+                  ></ng-container>
+                </ul>
+              </li>
+            </ng-container>
+          </ng-template>
+
           <li
             nz-menu-item
             nzMatchRouter
@@ -74,9 +96,11 @@
     </nz-sider>
     <nz-layout style="padding: 0 24px 24px">
       <nz-breadcrumb style="margin: 16px 0">
-        <nz-breadcrumb-item>面包屑</nz-breadcrumb-item>
+        <nz-breadcrumb-item *ngFor="let item of breadcrumbs">{{
+          item.menuName
+        }}</nz-breadcrumb-item>
       </nz-breadcrumb>
-      <nz-content class="index-content">
+      <nz-content [@routeAnimations]="getRouteAnimationData()" class="index-content">
         <router-outlet></router-outlet>
       </nz-content>
     </nz-layout>

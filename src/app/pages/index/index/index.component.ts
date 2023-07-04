@@ -1,6 +1,6 @@
-import { Component } from '@angular/core'
+import { Component, Inject, OnInit } from '@angular/core'
 import { CommonModule } from '@angular/common'
-import { RouterModule, Router } from '@angular/router'
+import { RouterModule, Router, ActivatedRoute, NavigationEnd } from '@angular/router'
 
 import { NzLayoutModule } from 'ng-zorro-antd/layout'
 import { NzMenuModule } from 'ng-zorro-antd/menu'
@@ -19,6 +19,21 @@ import { tokenLocalforage } from '@/app/storage/localforage'
 
 import { environment } from '@/environments/environment'
 
+import { MenuStore } from '@/app/stores/menu'
+import type { MenuDataItemType } from '@/app/pages/personal-center/types'
+
+import { GET_ACTIVE_ROUTE, GET_ACTIVE_ROUTE_TYPE } from '@/app/shared/utils/getActiveRoute'
+import { slideInAnimation } from './animations'
+import { filter } from 'rxjs'
+
+interface Menu {
+  title: string
+  path?: string
+  icon?: string
+  level: number
+  children?: Menu[]
+}
+
 @Component({
   imports: [
     CommonModule,
@@ -35,19 +50,75 @@ import { environment } from '@/environments/environment'
   selector: 'app-index',
   templateUrl: './index.component.html',
   styleUrls: ['./index.component.less'],
+  animations: [slideInAnimation],
   standalone: true
 })
-export default class IndexComponent {
+export default class IndexComponent implements OnInit {
   constructor(
     public userInfoStore: UserInfoStore,
     private modal: NzModalService,
     private message: NzMessageService,
     private authenticateService: AuthenticateService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute,
+    private menuStore: MenuStore,
+    @Inject(GET_ACTIVE_ROUTE) private getActiveRoute: GET_ACTIVE_ROUTE_TYPE
   ) {}
   isCollapsed = false
   logoSvg = '../../../assets/image/logo.svg'
   systemName = environment.SYSTEM_NAME
+  menus: Menu[] = []
+  breadcrumbs: {
+    menuName: string
+  }[] = []
+
+  getRouteAnimationData() {
+    return this.route.snapshot.url
+  }
+
+  getBreadcrumbList() {
+    const route = this.getActiveRoute()
+    this.breadcrumbs = [
+      {
+        menuName: route?.snapshot.data['menuName']
+      }
+    ]
+  }
+
+  ngOnInit(): void {
+    this.getBreadcrumbList()
+    this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe(() => {
+      this.getBreadcrumbList()
+    })
+
+    this.menuStore.data.subscribe((menuData) => {
+      // 格式化 menuData
+      const loop = (list: MenuDataItemType[], level: number, parentPath: string) => {
+        const result: Menu[] = []
+        list.forEach((item) => {
+          if (!item.hidden) {
+            const path = parentPath ? `${parentPath}${item.path}` : item.path
+            if (item.children && item.children.length) {
+              result.push({
+                title: item.name,
+                level,
+                icon: item.icon ? item.icon.replace('Outlined', '').toLocaleLowerCase() : 'folder',
+                children: loop(item.children, level + 1, path)
+              })
+            } else {
+              result.push({
+                title: item.name,
+                path,
+                level
+              })
+            }
+          }
+        })
+        return result
+      }
+      this.menus = loop(menuData, 1, '')
+    })
+  }
 
   logout() {
     this.modal.confirm({
