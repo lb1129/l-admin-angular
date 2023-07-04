@@ -1,13 +1,16 @@
-import { Injectable } from '@angular/core'
+import { Inject, Injectable } from '@angular/core'
 import { MenuStore } from '@/app/stores/menu'
-import { RouteSnapshotStore } from '@/app/stores/routeSnapshot'
 import type { OperateAuthType, MenuDataItemType } from '@/app/pages/personal-center/types'
+import { GET_ACTIVE_ROUTE, GET_ACTIVE_ROUTE_TYPE } from '@/app/shared/utils/getActiveRoute'
 
 @Injectable({
   providedIn: 'root'
 })
 export class Auth {
-  constructor(private menuStore: MenuStore, private routeSnapshotStore: RouteSnapshotStore) {}
+  constructor(
+    private menuStore: MenuStore,
+    @Inject(GET_ACTIVE_ROUTE) private getActiveRoute: GET_ACTIVE_ROUTE_TYPE
+  ) {}
 
   operateAuth: OperateAuthType = {}
   // TODO 其他权限...
@@ -25,7 +28,8 @@ export class Auth {
       let iterativeMenuData = [...menuData]
       while (iterativeMenuData.length) {
         const record = iterativeMenuData.shift() as MenuDataItemType
-        if (record.path === `/${this.routeSnapshotStore.data.routeConfig?.path}`) {
+        const route = this.getActiveRoute()
+        if (record.path === `/${route.routeConfig?.path}`) {
           if (record.operateAuth) operateAuth = record.operateAuth
           break
         } else if (record.children && record.children.length) {

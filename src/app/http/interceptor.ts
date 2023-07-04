@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core'
+import { Injectable, Inject } from '@angular/core'
 import { HttpInterceptor, HttpHandler, HttpRequest, HttpResponse } from '@angular/common/http'
 import { Router } from '@angular/router'
 import { environment } from '@/environments/environment'
@@ -8,14 +8,14 @@ import { NzMessageService } from 'ng-zorro-antd/message'
 import { tokenLocalforage } from '@/app/storage/localforage'
 import { Observable, ReplaySubject, delay } from 'rxjs'
 import isAuthenticated from '@/app/auth/isAuthenticated'
-import { RouteSnapshotStore } from '@/app/stores/routeSnapshot'
+import { GET_ACTIVE_ROUTE, GET_ACTIVE_ROUTE_TYPE } from '@/app/shared/utils/getActiveRoute'
 
 @Injectable()
 export class Interceptor implements HttpInterceptor {
   constructor(
     private message: NzMessageService,
     private router: Router,
-    private routeSnapshotStore: RouteSnapshotStore
+    @Inject(GET_ACTIVE_ROUTE) private getActiveRoute: GET_ACTIVE_ROUTE_TYPE
   ) {}
 
   // 支持异步处理req
@@ -68,8 +68,9 @@ export class Interceptor implements HttpInterceptor {
       }),
       // 错误处理
       catchError(async (error) => {
+        const route = this.getActiveRoute()
         if (error.status === 401) {
-          if (this.routeSnapshotStore.data.data['needAuth'] === true) {
+          if (route.snapshot.data && route.snapshot.data['needAuth'] === true) {
             await tokenLocalforage.clear()
             const subject = new ReplaySubject<boolean>(1)
             isAuthenticated.value = subject
