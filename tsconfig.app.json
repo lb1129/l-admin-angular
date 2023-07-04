@@ -6,5 +6,6 @@
     "types": []
   },
   "files": ["src/main.ts"],
-  "include": ["src/**/*.d.ts"]
+  "include": ["src/**/*.d.ts", "src/app/pages/**/*.ts"],
+  "exclude": ["src/app/pages/**/*.spec.ts"]
 }
