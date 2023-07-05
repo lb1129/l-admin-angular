@@ -2,6 +2,7 @@ import { NgModule, LOCALE_ID } from '@angular/core'
 import { BrowserModule } from '@angular/platform-browser'
 import { HttpClientModule, HTTP_INTERCEPTORS, HttpClient } from '@angular/common/http'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
+import { RouteReuseStrategy } from '@angular/router'
 
 import { registerLocaleData } from '@angular/common'
 import en from '@angular/common/locales/en'
@@ -21,6 +22,8 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader'
 
 import { environment } from '@/environments/environment'
 
+import { CustomReuseStrategy } from '@/app/shared/utils/CustomReuseStrategy'
+
 registerLocaleData(en)
 registerLocaleData(zh)
 
@@ -31,7 +34,7 @@ const ngZorroConfig: NzConfig = {
 }
 
 const HttpLoaderFactory = (http: HttpClient) => {
-  return new TranslateHttpLoader(http)
+  return new TranslateHttpLoader(http, 'assets/i18n/')
 }
 
 @NgModule({
@@ -52,6 +55,7 @@ const HttpLoaderFactory = (http: HttpClient) => {
   ],
   providers: [
     NzMessageService,
+    { provide: RouteReuseStrategy, useClass: CustomReuseStrategy },
     {
       provide: NZ_I18N,
       useFactory: (localId: string) => {
