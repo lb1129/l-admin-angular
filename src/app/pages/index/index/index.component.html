@@ -87,6 +87,7 @@
               <li
                 *ngIf="menu.children"
                 nz-submenu
+                [nzOpen]="getSubmenuOpen(menu.path)"
                 [nzPaddingLeft]="isCollapsed ? 0 : menu.level * 24"
                 [nzTitle]="translate.get(menu.title) | async"
                 [nzIcon]="menu.icon"

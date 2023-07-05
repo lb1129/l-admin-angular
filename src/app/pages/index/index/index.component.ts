@@ -88,7 +88,7 @@ export default class IndexComponent implements OnInit {
   }
 
   getBreadcrumbList() {
-    const route = this.getActiveRoute()
+    const { route } = this.getActiveRoute()
     this.breadcrumbs = [
       {
         menuName: route?.snapshot.data['menuName']
@@ -100,6 +100,11 @@ export default class IndexComponent implements OnInit {
     this.nzConfigService.set('theme', {
       primaryColor: color.hex
     })
+  }
+
+  getSubmenuOpen(path: string) {
+    const { routePath } = this.getActiveRoute()
+    return routePath.findIndex((route) => '/' + route.snapshot.routeConfig?.path === path) !== -1
   }
 
   ngOnInit(): void {
@@ -118,6 +123,7 @@ export default class IndexComponent implements OnInit {
             if (item.children && item.children.length) {
               result.push({
                 title: item.name,
+                path,
                 level,
                 icon: item.icon ? item.icon.replace('Outlined', '').toLocaleLowerCase() : 'folder',
                 children: loop(item.children, level + 1, path)
