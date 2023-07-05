@@ -1,0 +1,80 @@
+<div
+  role="application"
+  aria-label="Sketch color picker"
+  [class]="['vc-sketch', appDisableAlpha ? 'vc-sketch-disable-alpha' : '']"
+>
+  <div class="vc-sketch-saturation-wrap">
+    <app-color-picker-saturation [appValue]="innerValue.hsv" (appChange)="changeHandle($event)" />
+  </div>
+  <div class="vc-sketch-controls">
+    <div class="vc-sketch-sliders">
+      <div class="vc-sketch-hue-wrap">
+        <app-color-picker-hue [appValue]="innerValue.hsl" (appChange)="changeHandle($event)" />
+      </div>
+      <div class="vc-sketch-alpha-wrap" *ngIf="!appDisableAlpha">
+        <app-color-picker-alpha [appValue]="innerValue.rgba" (appChange)="changeHandle($event)" />
+      </div>
+    </div>
+    <div class="vc-sketch-color-wrap">
+      <div class="vc-sketch-active-color" [style]="{ background: getActiveColor() }"></div>
+      <app-color-picker-checkboard />
+    </div>
+  </div>
+  <div class="vc-sketch-field" *ngIf="!appDisableFields">
+    <!-- Hex, 8-digit (RGBA) Hex -->
+    <div class="vc-sketch-field-double">
+      <app-color-picker-editable-input
+        appType="text"
+        appLabel="HEX"
+        [appValue]="innerValue.hex"
+        (appChange)="hexChangeHandle($event)"
+      />
+    </div>
+    <!-- RGB, RGBA -->
+    <div class="vc-sketch-field-single">
+      <app-color-picker-editable-input
+        appLabel="R"
+        [appValue]="innerValue.rgba.r"
+        (appChange)="rgbaSingleChangeHandle($event, 'r')"
+      />
+    </div>
+    <div class="vc-sketch-field-single">
+      <app-color-picker-editable-input
+        appLabel="G"
+        [appValue]="innerValue.rgba.g"
+        (appChange)="rgbaSingleChangeHandle($event, 'g')"
+      />
+    </div>
+    <div class="vc-sketch-field-single">
+      <app-color-picker-editable-input
+        appLabel="B"
+        [appValue]="innerValue.rgba.b"
+        (appChange)="rgbaSingleChangeHandle($event, 'b')"
+      />
+    </div>
+    <div class="vc-sketch-field-single" *ngIf="!appDisableAlpha">
+      <app-color-picker-editable-input
+        appLabel="A"
+        [appValue]="innerValue.rgba.a"
+        [appStep]="0.01"
+        [appMax]="1"
+        [appPrecision]="2"
+        (appChange)="rgbaSingleChangeHandle($event, 'a')"
+      />
+    </div>
+  </div>
+  <div
+    class="vc-sketch-presets"
+    role="group"
+    aria-label="A color preset, pick one to set as current color"
+  >
+    <div
+      *ngFor="let rgba of getInnerRgbaPresets()"
+      class="vc-sketch-presets-color"
+      [style]="{ background: rgba }"
+      (click)="changeHandle(rgba)"
+    >
+      <app-color-picker-checkboard />
+    </div>
+  </div>
+</div>
