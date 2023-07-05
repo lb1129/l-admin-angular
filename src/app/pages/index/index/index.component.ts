@@ -65,7 +65,7 @@ export default class IndexComponent implements OnInit {
     @Inject(GET_ACTIVE_ROUTE) private getActiveRoute: GET_ACTIVE_ROUTE_TYPE
   ) {}
   isCollapsed = false
-  logoSvg = '../../../assets/image/logo.svg'
+  logoSvg = 'assets/image/logo.svg'
   systemName = environment.SYSTEM_NAME
   menus: Menu[] = []
   breadcrumbs: {
