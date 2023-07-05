@@ -13,7 +13,7 @@
         [nzDropdownMenu]="menu"
         class="index-header-right-item index-header-right-item_user"
       >
-        <nz-avatar nzSize="small" nzSrc="../../../../assets/image/user.png" />
+        <nz-avatar nzSize="small" nzSrc="assets/image/user.png" />
         <span style="margin-left: 8px">{{ userInfoStore.data.userName }}</span>
       </span>
       <nz-dropdown-menu #menu>
@@ -56,7 +56,7 @@
               <li
                 *ngIf="!menu.children"
                 nz-menu-item
-                [nzPaddingLeft]="menu.level * 24"
+                [nzPaddingLeft]="isCollapsed ? 0 : menu.level * 24"
                 nzMatchRouter
                 nzMatchRouterExact
               >
@@ -65,7 +65,7 @@
               <li
                 *ngIf="menu.children"
                 nz-submenu
-                [nzPaddingLeft]="menu.level * 24"
+                [nzPaddingLeft]="isCollapsed ? 0 : menu.level * 24"
                 [nzTitle]="menu.title"
                 [nzIcon]="menu.icon"
               >
