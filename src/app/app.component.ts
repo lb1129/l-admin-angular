@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core'
-import { Route, Data, Router } from '@angular/router'
+import { Component, Inject, OnInit } from '@angular/core'
+import { Route, Data, Router, ActivatedRoute } from '@angular/router'
 
 import { AuthenticateService } from '@/app/pages/authenticate/services'
 import { PersonalCenterService } from '@/app/pages/personal-center/service'
@@ -8,6 +8,7 @@ import { MenuStore } from '@/app/stores/menu'
 import { UserInfoStore } from '@/app/stores/userInfo'
 import type { MenuDataItemType } from '@/app/pages/personal-center/types'
 import { lazyLoad } from '@/app/shared/utils/lazyLoad'
+import { GET_ACTIVE_ROUTE, GET_ACTIVE_ROUTE_TYPE } from '@/app/shared/utils/getActiveRoute'
 
 @Component({
   selector: 'app-root',
@@ -20,7 +21,9 @@ export class AppComponent implements OnInit {
     private personalCenterService: PersonalCenterService,
     private menuStore: MenuStore,
     private userInfoStore: UserInfoStore,
-    private router: Router
+    private router: Router,
+    private activatedRoute: ActivatedRoute,
+    @Inject(GET_ACTIVE_ROUTE) private getActiveRoute: GET_ACTIVE_ROUTE_TYPE
   ) {}
 
   getChildrenPath(path: string) {
@@ -121,7 +124,8 @@ export class AppComponent implements OnInit {
       // 重设路由
       this.router.resetConfig([...baseRoutes])
       // 触发重新匹配
-      this.router.navigate([], { replaceUrl: true })
+      const route = this.getActiveRoute()
+      if (route.snapshot.routeConfig?.path === '**') this.router.navigate([], { replaceUrl: true })
     })
   }
 }
