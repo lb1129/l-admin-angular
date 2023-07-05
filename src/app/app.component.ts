@@ -124,7 +124,8 @@ export class AppComponent implements OnInit {
       this.router.resetConfig([...baseRoutes])
       // 触发重新匹配
       const { route } = this.getActiveRoute()
-      if (route.snapshot.routeConfig?.path === '**') this.router.navigate([], { replaceUrl: true })
+      if (route.snapshot.routeConfig?.path === '**')
+        this.router.navigateByUrl(this.router.url, { replaceUrl: true })
     })
   }
 }
