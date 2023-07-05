@@ -3,7 +3,6 @@ import {
   animateChild,
   group,
   query,
-  state,
   style,
   transition,
   trigger
@@ -26,17 +25,24 @@ export const slideInAnimation = trigger('routeAnimations', [
       ],
       { optional: true }
     ),
-    query(':enter', [style({ transform: 'translate3d(100%, 0, 0)' })], { optional: true }),
+    // query(':enter', [style({ transform: 'translate3d(100%, 0, 0)' })], { optional: true }),
+    query(':enter', [style({ opacity: 0 })], { optional: true }),
     query(':leave', animateChild(), { optional: true }),
     group([
-      query(
-        ':leave',
-        [animate('200ms ease-out', style({ transform: 'translate3d(-100%, 0, 0)', opacity: 0 }))],
-        {
-          optional: true
-        }
-      ),
-      query(':enter', [animate('300ms ease-out', style({ transform: 'translate3d(0%, 0, 0)' }))], {
+      // query(
+      //   ':leave',
+      //   [animate('200ms ease-out', style({ transform: 'translate3d(-100%, 0, 0)', opacity: 0 }))],
+      //   {
+      //     optional: true
+      //   }
+      // ),
+      query(':leave', [animate('300ms', style({ opacity: 0 }))], {
+        optional: true
+      }),
+      // query(':enter', [animate('300ms ease-out', style({ transform: 'translate3d(0%, 0, 0)' }))], {
+      //   optional: true
+      // }),
+      query(':enter', [animate('300ms', style({ opacity: 1 }))], {
         optional: true
       }),
       query('@*', animateChild(), { optional: true })
