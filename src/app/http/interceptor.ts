@@ -9,13 +9,15 @@ import { tokenLocalforage } from '@/app/storage/localforage'
 import { Observable, ReplaySubject, delay } from 'rxjs'
 import isAuthenticated from '@/app/auth/isAuthenticated'
 import { GET_ACTIVE_ROUTE, GET_ACTIVE_ROUTE_TYPE } from '@/app/shared/utils/getActiveRoute'
+import { NzI18nService } from 'ng-zorro-antd/i18n'
 
 @Injectable()
 export class Interceptor implements HttpInterceptor {
   constructor(
     private message: NzMessageService,
     private router: Router,
-    @Inject(GET_ACTIVE_ROUTE) private getActiveRoute: GET_ACTIVE_ROUTE_TYPE
+    @Inject(GET_ACTIVE_ROUTE) private getActiveRoute: GET_ACTIVE_ROUTE_TYPE,
+    private nzI18nService: NzI18nService
   ) {}
 
   // 支持异步处理req
@@ -33,7 +35,9 @@ export class Interceptor implements HttpInterceptor {
               })
             : req.url,
           setHeaders: {
-            Authorization: token
+            Authorization: token,
+            // NOTE TranslateService 依赖 http 在此处使用会循环依赖
+            'Accept-Language': this.nzI18nService.getLocaleId()
           }
         })
         observer.next(newReq)
@@ -54,7 +58,9 @@ export class Interceptor implements HttpInterceptor {
         if (event instanceof HttpResponse) {
           // 处于 mock server 环境
           if (environment.SERVER_IS_MOCK) {
-            if (event.body.status >= 200 && event.body.status < 300) {
+            if (!event.body.status) {
+              return event
+            } else if (event.body.status >= 200 && event.body.status < 300) {
               return event.clone({ body: event.body.data })
             } else {
               // 抛出错误 走catchError
