@@ -23,8 +23,11 @@ import { MenuStore } from '@/app/stores/menu'
 import type { MenuDataItemType } from '@/app/pages/personal-center/types'
 
 import { GET_ACTIVE_ROUTE, GET_ACTIVE_ROUTE_TYPE } from '@/app/shared/utils/getActiveRoute'
+import { ColorPickerComponent, ColorType } from '@/app/shared/color-picker/color-picker.component'
 import { slideInAnimation } from './animations'
 import { filter } from 'rxjs'
+
+import { NzConfigService } from 'ng-zorro-antd/core/config'
 
 interface Menu {
   title: string
@@ -45,7 +48,8 @@ interface Menu {
     NzAvatarModule,
     NzToolTipModule,
     NzIconModule,
-    NzModalModule
+    NzModalModule,
+    ColorPickerComponent
   ],
   selector: 'app-index',
   templateUrl: './index.component.html',
@@ -62,7 +66,8 @@ export default class IndexComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private menuStore: MenuStore,
-    @Inject(GET_ACTIVE_ROUTE) private getActiveRoute: GET_ACTIVE_ROUTE_TYPE
+    @Inject(GET_ACTIVE_ROUTE) private getActiveRoute: GET_ACTIVE_ROUTE_TYPE,
+    public nzConfigService: NzConfigService
   ) {}
   isCollapsed = false
   logoSvg = 'assets/image/logo.svg'
@@ -83,6 +88,12 @@ export default class IndexComponent implements OnInit {
         menuName: route?.snapshot.data['menuName']
       }
     ]
+  }
+
+  colorPickerChange(color: ColorType) {
+    this.nzConfigService.set('theme', {
+      primaryColor: color.hex
+    })
   }
 
   ngOnInit(): void {

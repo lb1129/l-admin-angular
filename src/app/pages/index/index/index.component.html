@@ -8,6 +8,25 @@
     </div>
     <div class="index-header-center"></div>
     <div class="index-header-right">
+      <span nz-dropdown [nzDropdownMenu]="colorPickerMenu" class="index-header-right-item">
+        <span nz-icon nzType="bg-colors" style="font-size: 16px"></span>
+      </span>
+      <nz-dropdown-menu #colorPickerMenu>
+        <app-color-picker
+          appValue="#1890ff"
+          (appChange)="colorPickerChange($event)"
+          [appPresets]="[
+            '#1677ff',
+            '#f5222d',
+            '#fa541c',
+            '#faad14',
+            '#13c2c2',
+            '#52c41a',
+            '#2f54eb',
+            '#722ed1'
+          ]"
+        />
+      </nz-dropdown-menu>
       <span
         nz-dropdown
         [nzDropdownMenu]="menu"
