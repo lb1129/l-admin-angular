@@ -1,5 +1,6 @@
 import { Component } from '@angular/core'
 import { RouterModule, Router } from '@angular/router'
+import { CommonModule } from '@angular/common'
 import {
   UntypedFormBuilder,
   UntypedFormGroup,
@@ -18,10 +19,12 @@ import { MenuStore } from '@/app/stores/menu'
 import { UserInfoStore } from '@/app/stores/userInfo'
 
 import { tokenLocalforage } from '@/app/storage/localforage'
+import { TranslateService } from '@ngx-translate/core'
 
 @Component({
   imports: [
     RouterModule,
+    CommonModule,
     ReactiveFormsModule,
     NzFormModule,
     NzInputModule,
@@ -45,7 +48,8 @@ export default class LoginComponent {
     private router: Router,
     private notification: NzNotificationService,
     private menuStore: MenuStore,
-    private userInfoStore: UserInfoStore
+    private userInfoStore: UserInfoStore,
+    public translate: TranslateService
   ) {
     this.form = this.fb.group({
       userName: ['', Validators.required],
@@ -72,7 +76,9 @@ export default class LoginComponent {
               this.router.navigate([''], { replaceUrl: true })
               setTimeout(() => {
                 // 欢迎提示
-                this.notification.success('欢迎回来', userInfoRes.data.userName)
+                this.translate.get('welcome').subscribe((message) => {
+                  this.notification.success(message, userInfoRes.data.userName)
+                })
               }, 200)
               this.loading = false
             })

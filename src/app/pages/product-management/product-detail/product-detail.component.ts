@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core'
 import { Router, ActivatedRoute } from '@angular/router'
-import { Location } from '@angular/common'
+import { Location, CommonModule } from '@angular/common'
 import { NzPageHeaderModule } from 'ng-zorro-antd/page-header'
 import { NzDescriptionsModule } from 'ng-zorro-antd/descriptions'
 import { NzSkeletonModule } from 'ng-zorro-antd/skeleton'
@@ -11,8 +11,16 @@ import { ProductService } from '../services'
 
 import { Auth } from '@/app/auth/auth'
 
+import { TranslateService } from '@ngx-translate/core'
+
 @Component({
-  imports: [NzPageHeaderModule, NzDescriptionsModule, NzSkeletonModule, NzButtonModule],
+  imports: [
+    NzPageHeaderModule,
+    NzDescriptionsModule,
+    NzSkeletonModule,
+    NzButtonModule,
+    CommonModule
+  ],
   selector: 'app-product-detail',
   templateUrl: './product-detail.component.html',
   styleUrls: ['./product-detail.component.less'],
@@ -24,7 +32,8 @@ export default class ProductDetailComponent implements OnInit {
     private location: Location,
     private route: ActivatedRoute,
     private productService: ProductService,
-    public auth: Auth
+    public auth: Auth,
+    public translate: TranslateService
   ) {}
   details: ProductType = {
     id: '',

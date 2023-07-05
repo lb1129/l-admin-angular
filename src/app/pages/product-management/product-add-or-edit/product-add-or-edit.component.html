@@ -1,7 +1,11 @@
-<nz-page-header (nzBack)="backHandler()" nzBackIcon [nzTitle]="id ? '编辑' : '新增'">
+<nz-page-header
+  (nzBack)="backHandler()"
+  nzBackIcon
+  [nzTitle]="translate.get(id ? 'edit' : 'detail') | async"
+>
   <nz-page-header-extra>
     <button nz-button nzType="primary" (click)="saveHandler()" [nzLoading]="submitLoading">
-      保存
+      {{ translate.get('save') | async }}
     </button>
   </nz-page-header-extra>
   <nz-page-header-content>

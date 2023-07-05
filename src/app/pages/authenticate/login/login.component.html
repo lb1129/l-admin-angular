@@ -1,28 +1,37 @@
 <app-layout>
   <form nz-form [formGroup]="form" (ngSubmit)="submitHandler()">
     <nz-form-item>
-      <nz-form-control nzErrorTip="请输入用户名">
+      <nz-form-control [nzErrorTip]="translate.get('pleaseEnterAccount') | async">
         <nz-input-group class="input-group" nzPrefixIcon="user" nzSize="large">
           <input
             type="text"
             nz-input
             formControlName="userName"
-            placeholder="用户名admin/viho/user"
+            [placeholder]="(translate.get('account') | async) + 'admin/viho/user'"
           />
         </nz-input-group>
       </nz-form-control>
     </nz-form-item>
     <nz-form-item>
-      <nz-form-control nzErrorTip="请输入密码">
+      <nz-form-control [nzErrorTip]="translate.get('pleaseEnterPassword') | async">
         <nz-input-group class="input-group" nzPrefixIcon="lock" nzSize="large">
-          <input type="password" nz-input formControlName="password" placeholder="密码a123456" />
+          <input
+            type="password"
+            nz-input
+            formControlName="password"
+            [placeholder]="(translate.get('password') | async) + 'a123456'"
+          />
         </nz-input-group>
       </nz-form-control>
     </nz-form-item>
     <nz-form-item style="display: block">
-      <a routerLink="/register">注册账号</a>
-      <a routerLink="/findPassword" style="float: right">忘记密码</a>
+      <a routerLink="/register">{{ translate.get('signUp') | async }}</a>
+      <a routerLink="/findPassword" style="float: right">{{
+        translate.get('forgotPassword') | async
+      }}</a>
     </nz-form-item>
-    <button nz-button nzType="primary" nzBlock nzSize="large" [nzLoading]="loading">登录</button>
+    <button nz-button nzType="primary" nzBlock nzSize="large" [nzLoading]="loading">
+      {{ translate.get('login') | async }}
+    </button>
   </form>
 </app-layout>

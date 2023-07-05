@@ -32,7 +32,8 @@
     &-right {
       display: flex;
 
-      &-item {
+      ::ng-deep &-item {
+        display: inline-block;
         padding: 0 12px;
         cursor: pointer;
         transition: all 0.3s;

@@ -29,6 +29,10 @@ import { filter } from 'rxjs'
 
 import { NzConfigService } from 'ng-zorro-antd/core/config'
 
+import { ToggleLanguageComponent } from '@/app/shared/toggle-language/toggle-language.component'
+
+import { TranslateService } from '@ngx-translate/core'
+
 interface Menu {
   title: string
   path?: string
@@ -49,7 +53,8 @@ interface Menu {
     NzToolTipModule,
     NzIconModule,
     NzModalModule,
-    ColorPickerComponent
+    ColorPickerComponent,
+    ToggleLanguageComponent
   ],
   selector: 'app-index',
   templateUrl: './index.component.html',
@@ -67,7 +72,8 @@ export default class IndexComponent implements OnInit {
     private route: ActivatedRoute,
     private menuStore: MenuStore,
     @Inject(GET_ACTIVE_ROUTE) private getActiveRoute: GET_ACTIVE_ROUTE_TYPE,
-    public nzConfigService: NzConfigService
+    public nzConfigService: NzConfigService,
+    public translate: TranslateService
   ) {}
   isCollapsed = false
   logoSvg = 'assets/image/logo.svg'
@@ -132,25 +138,29 @@ export default class IndexComponent implements OnInit {
   }
 
   logout() {
-    this.modal.confirm({
-      nzTitle: '提示',
-      nzContent: '确定注销登录吗？',
-      nzClosable: false,
-      nzOnOk: () => {
-        const messageRef = this.message.loading('正在注销，请稍等 ...', {
-          nzDuration: 0
-        })
-        this.authenticateService.logout().subscribe({
-          next: () => {
-            tokenLocalforage.clear()
-            this.message.remove(messageRef.messageId)
-            this.router.navigate(['login'], { replaceUrl: true })
-          },
-          error: () => {
-            this.message.remove(messageRef.messageId)
+    this.translate
+      .get(['tip', 'areYouSureToLogOut', 'signingOutPleaseWait'])
+      .subscribe((messages) => {
+        this.modal.confirm({
+          nzTitle: messages.tip,
+          nzContent: messages.areYouSureToLogOut,
+          nzClosable: false,
+          nzOnOk: () => {
+            const messageRef = this.message.loading(messages.signingOutPleaseWait, {
+              nzDuration: 0
+            })
+            this.authenticateService.logout().subscribe({
+              next: () => {
+                tokenLocalforage.clear()
+                this.message.remove(messageRef.messageId)
+                this.router.navigate(['login'], { replaceUrl: true })
+              },
+              error: () => {
+                this.message.remove(messageRef.messageId)
+              }
+            })
           }
         })
-      }
-    })
+      })
   }
 }

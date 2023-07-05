@@ -16,6 +16,8 @@ import { ResizeDirective, type ResizeChangeRes } from '@/app/shared/utils/resize
 
 import { Auth } from '@/app/auth/auth'
 
+import { TranslateService } from '@ngx-translate/core'
+
 interface Column {
   title: string
   dataIndex: keyof ProductType
@@ -47,7 +49,8 @@ export default class ProductListComponent implements OnInit {
     private router: Router,
     private productService: ProductService,
     private message: NzMessageService,
-    public auth: Auth
+    public auth: Auth,
+    public translate: TranslateService
   ) {}
 
   allChecked = false
@@ -128,9 +131,13 @@ export default class ProductListComponent implements OnInit {
     this.loading = true
     this.productService.deleteProductByIds(ids).subscribe({
       next: () => {
-        this.message.success('删除成功')
-        this.loading = false
-        this.loadData()
+        this.translate.get('delete').subscribe((message) => {
+          this.translate.get('whatSuccess', { value: message }).subscribe((message) => {
+            this.message.success(message)
+            this.loading = false
+            this.loadData()
+          })
+        })
       },
       error: () => {
         this.loading = false

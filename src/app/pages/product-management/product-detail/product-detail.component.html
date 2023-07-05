@@ -1,4 +1,4 @@
-<nz-page-header (nzBack)="backHandler()" nzBackIcon nzTitle="详情">
+<nz-page-header (nzBack)="backHandler()" nzBackIcon [nzTitle]="translate.get('detail') | async">
   <nz-page-header-extra>
     <button
       nz-button
@@ -6,7 +6,7 @@
       [disabled]="auth.operateAuthValueToDisabled(auth.operateAuth.edit)"
       (click)="editHandler()"
     >
-      编辑
+      {{ translate.get('edit') | async }}
     </button>
   </nz-page-header-extra>
   <nz-page-header-content>

@@ -37,11 +37,14 @@
       </span>
       <nz-dropdown-menu #menu>
         <ul nz-menu nzSelectable>
-          <li nz-menu-item routerLink="/personalCenter">个人中心</li>
+          <li nz-menu-item routerLink="/personalCenter">
+            {{ translate.get('personalCenter') | async }}
+          </li>
           <li nz-menu-divider></li>
-          <li nz-menu-item (click)="logout()">退出登录</li>
+          <li nz-menu-item (click)="logout()">{{ translate.get('logOut') | async }}</li>
         </ul>
       </nz-dropdown-menu>
+      <app-toggle-language appClass="index-header-right-item" />
     </div>
   </nz-header>
   <nz-layout>
@@ -61,11 +64,11 @@
             nzMatchRouterExact
             nz-tooltip
             nzTooltipPlacement="right"
-            [nzTooltipTitle]="isCollapsed ? '首页' : ''"
+            [nzTooltipTitle]="isCollapsed ? (translate.get('homePage') | async) : ''"
           >
             <span nz-icon nzType="dashboard"></span>
             <span>
-              <a routerLink="/">首页</a>
+              <a routerLink="/">{{ translate.get('homePage') | async }}</a>
             </span>
           </li>
 
@@ -79,13 +82,13 @@
                 nzMatchRouter
                 nzMatchRouterExact
               >
-                <a [routerLink]="menu.path">{{ menu.title }}</a>
+                <a [routerLink]="menu.path">{{ translate.get(menu.title) | async }}</a>
               </li>
               <li
                 *ngIf="menu.children"
                 nz-submenu
                 [nzPaddingLeft]="isCollapsed ? 0 : menu.level * 24"
-                [nzTitle]="menu.title"
+                [nzTitle]="translate.get(menu.title) | async"
                 [nzIcon]="menu.icon"
               >
                 <ul>
@@ -103,11 +106,11 @@
             nzMatchRouterExact
             nz-tooltip
             nzTooltipPlacement="right"
-            [nzTooltipTitle]="isCollapsed ? '个人中心' : ''"
+            [nzTooltipTitle]="isCollapsed ? (translate.get('personalCenter') | async) : ''"
           >
             <span nz-icon nzType="user"></span>
             <span>
-              <a routerLink="/personalCenter">个人中心</a>
+              <a routerLink="/personalCenter">{{ translate.get('personalCenter') | async }}</a>
             </span>
           </li>
         </ul>
@@ -116,7 +119,7 @@
     <nz-layout style="padding: 0 24px 24px">
       <nz-breadcrumb style="margin: 16px 0">
         <nz-breadcrumb-item *ngFor="let item of breadcrumbs">{{
-          item.menuName
+          translate.get(item.menuName) | async
         }}</nz-breadcrumb-item>
       </nz-breadcrumb>
       <nz-content [@routeAnimations]="getRouteAnimationData()" class="index-content">

@@ -1,5 +1,6 @@
 import { Component } from '@angular/core'
 import { RouterModule } from '@angular/router'
+import { CommonModule } from '@angular/common'
 import {
   UntypedFormBuilder,
   UntypedFormGroup,
@@ -11,9 +12,12 @@ import { NzInputModule } from 'ng-zorro-antd/input'
 import { NzButtonModule } from 'ng-zorro-antd/button'
 import LayoutComponent from '../layout/layout.component'
 
+import { TranslateService } from '@ngx-translate/core'
+
 @Component({
   imports: [
     RouterModule,
+    CommonModule,
     ReactiveFormsModule,
     NzFormModule,
     NzInputModule,
@@ -28,7 +32,7 @@ import LayoutComponent from '../layout/layout.component'
 export default class FindPasswordComponent {
   form!: UntypedFormGroup
 
-  constructor(private fb: UntypedFormBuilder) {
+  constructor(private fb: UntypedFormBuilder, public translate: TranslateService) {
     this.form = this.fb.group({
       password: ['', Validators.required],
       confirmPassword: ['', Validators.required],

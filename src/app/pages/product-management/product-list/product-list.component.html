@@ -1,4 +1,6 @@
-<ng-template #totalTemplate let-total>共 {{ total }} 条</ng-template>
+<ng-template #totalTemplate let-total>{{
+  translate.get('whatTotal', { value: total }) | async
+}}</ng-template>
 <ng-template #tableHeader>
   <nz-button-group>
     <button
@@ -7,7 +9,7 @@
       (click)="addHandler()"
       [disabled]="auth.operateAuthValueToDisabled(auth.operateAuth.add)"
     >
-      新增
+      {{ translate.get('add') | async }}
     </button>
     <button
       nz-button
@@ -15,10 +17,10 @@
         setOfCheckedId.size <= 0 || auth.operateAuthValueToDisabled(auth.operateAuth.delete)
       "
       nz-popconfirm
-      nzPopconfirmTitle="确定删除吗？"
+      [nzPopconfirmTitle]="translate.get('areYouSureDelete') | async"
       (nzOnConfirm)="deleteHandler()"
     >
-      删除
+      {{ translate.get('delete') | async }}
     </button>
   </nz-button-group>
   <div style="float: right">
@@ -26,7 +28,7 @@
       <input
         type="text"
         nz-input
-        placeholder="按名称搜索"
+        [placeholder]="translate.get('queryByName') | async"
         #searchInput
         (keydown.enter)="searchHadnler(searchInput.value)"
       />
@@ -109,7 +111,7 @@
             nzType="link"
             [disabled]="auth.operateAuthValueToDisabled(auth.operateAuth.edit)"
             [routerLink]="['/productManagement/productAddOrEdit/', data.id]"
-            >编辑</a
+            >{{ translate.get('edit') | async }}</a
           >
           <nz-divider nzType="vertical"></nz-divider>
           <a
@@ -117,9 +119,9 @@
             nzType="link"
             [disabled]="auth.operateAuthValueToDisabled(auth.operateAuth.delete)"
             nz-popconfirm
-            nzPopconfirmTitle="确定删除吗？"
+            [nzPopconfirmTitle]="translate.get('areYouSureDelete') | async"
             (nzOnConfirm)="deleteHandler(data.id)"
-            >删除</a
+            >{{ translate.get('delete') | async }}</a
           >
         </td>
       </tr>

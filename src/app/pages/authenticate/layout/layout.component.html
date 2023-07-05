@@ -1,7 +1,11 @@
 <div class="authenticate">
-  <div class="authenticate-header"></div>
+  <div class="authenticate-header">
+    <app-toggle-language />
+  </div>
   <div class="authenticate-title">{{ systemName }}</div>
-  <div class="authenticate-desc">这是对 {{ systemName }} 的描述</div>
+  <div class="authenticate-desc">
+    {{ translate.get('systemDesc', { value: systemName }) | async }}
+  </div>
   <div class="authenticate-main">
     <ng-content></ng-content>
   </div>
@@ -9,7 +13,7 @@
     Copyright © 2023 {{ systemName }}<nz-divider nzType="vertical" /><a
       target="_blank"
       routerLink="/privacyPolicy"
-      >隐私政策</a
+      >{{ translate.get('privacyPolicy') | async }}</a
     >
   </div>
 </div>

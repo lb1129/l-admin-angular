@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core'
-import { Location } from '@angular/common'
+import { Location, CommonModule } from '@angular/common'
 import { ActivatedRoute } from '@angular/router'
 import {
   UntypedFormBuilder,
@@ -20,8 +20,11 @@ import { NzMessageService } from 'ng-zorro-antd/message'
 
 import { ProductService } from '../services'
 
+import { TranslateService } from '@ngx-translate/core'
+
 @Component({
   imports: [
+    CommonModule,
     ReactiveFormsModule,
     NzPageHeaderModule,
     NzDescriptionsModule,
@@ -48,7 +51,8 @@ export default class ProductAddOrEditComponent implements OnInit {
     private fb: UntypedFormBuilder,
     private route: ActivatedRoute,
     private productService: ProductService,
-    private message: NzMessageService
+    private message: NzMessageService,
+    public translate: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -101,9 +105,13 @@ export default class ProductAddOrEditComponent implements OnInit {
       if (this.id) value.id = this.id
       this.productService.saveProduct(value).subscribe({
         next: () => {
-          this.submitLoading = false
-          this.message.success('保存成功')
-          this.location.back()
+          this.translate.get('save').subscribe((message) => {
+            this.translate.get('whatSuccess', { value: message }).subscribe((message) => {
+              this.submitLoading = false
+              this.message.success(message)
+              this.location.back()
+            })
+          })
         },
         error: () => {
           this.submitLoading = false
