@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core'
-import { Route, Data, Router, ActivatedRoute } from '@angular/router'
+import { Route, Data, Router } from '@angular/router'
 
 import { AuthenticateService } from '@/app/pages/authenticate/services'
 import { PersonalCenterService } from '@/app/pages/personal-center/service'
@@ -22,7 +22,6 @@ export class AppComponent implements OnInit {
     private menuStore: MenuStore,
     private userInfoStore: UserInfoStore,
     private router: Router,
-    private activatedRoute: ActivatedRoute,
     @Inject(GET_ACTIVE_ROUTE) private getActiveRoute: GET_ACTIVE_ROUTE_TYPE
   ) {}
 
