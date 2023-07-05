@@ -1,6 +1,6 @@
 export const environment = {
-  ENV: 'development',
+  ENV: 'production',
   SYSTEM_NAME: 'l-admin',
   NOT_SUPPORT_HISTORY: false,
-  SERVER_IS_MOCK: true
+  SERVER_IS_MOCK: false
 }
