@@ -28,7 +28,7 @@ export class Auth {
       let iterativeMenuData = [...menuData]
       while (iterativeMenuData.length) {
         const record = iterativeMenuData.shift() as MenuDataItemType
-        const route = this.getActiveRoute()
+        const { route } = this.getActiveRoute()
         if (record.path === `/${route.routeConfig?.path}`) {
           if (record.operateAuth) operateAuth = record.operateAuth
           break

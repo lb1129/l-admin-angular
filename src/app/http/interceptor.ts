@@ -74,7 +74,7 @@ export class Interceptor implements HttpInterceptor {
       }),
       // 错误处理
       catchError(async (error) => {
-        const route = this.getActiveRoute()
+        const { route } = this.getActiveRoute()
         if (error.status === 401) {
           if (route.snapshot.data && route.snapshot.data['needAuth'] === true) {
             await tokenLocalforage.clear()

@@ -123,7 +123,7 @@ export class AppComponent implements OnInit {
       // 重设路由
       this.router.resetConfig([...baseRoutes])
       // 触发重新匹配
-      const route = this.getActiveRoute()
+      const { route } = this.getActiveRoute()
       if (route.snapshot.routeConfig?.path === '**') this.router.navigate([], { replaceUrl: true })
     })
   }
