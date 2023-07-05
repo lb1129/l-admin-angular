@@ -1,7 +1,7 @@
 <nz-page-header
   (nzBack)="backHandler()"
   nzBackIcon
-  [nzTitle]="translate.get(id ? 'edit' : 'detail') | async"
+  [nzTitle]="translate.get(id ? 'edit' : 'add') | async"
 >
   <nz-page-header-extra>
     <button nz-button nzType="primary" (click)="saveHandler()" [nzLoading]="submitLoading">
