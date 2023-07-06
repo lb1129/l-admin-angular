@@ -5,10 +5,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { RouteReuseStrategy } from '@angular/router'
 
 import { registerLocaleData } from '@angular/common'
-import en from '@angular/common/locales/en'
 import zh from '@angular/common/locales/zh'
 
-import { NZ_I18N, zh_CN, en_US } from 'ng-zorro-antd/i18n'
+import { NZ_I18N, zh_CN, NZ_DATE_LOCALE } from 'ng-zorro-antd/i18n'
+import { zhCN } from 'date-fns/locale'
 import { NzMessageService } from 'ng-zorro-antd/message'
 import { NzConfig, NZ_CONFIG } from 'ng-zorro-antd/core/config'
 
@@ -20,11 +20,8 @@ import { Interceptor } from '@/app/http/interceptor'
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core'
 import { TranslateHttpLoader } from '@ngx-translate/http-loader'
 
-import { environment } from '@/environments/environment'
-
 import { CustomReuseStrategy } from '@/app/shared/utils/CustomReuseStrategy'
 
-registerLocaleData(en)
 registerLocaleData(zh)
 
 const ngZorroConfig: NzConfig = {
@@ -45,7 +42,7 @@ const HttpLoaderFactory = (http: HttpClient) => {
     BrowserAnimationsModule,
     AppRoutingModule,
     TranslateModule.forRoot({
-      defaultLanguage: environment.LOCALE,
+      defaultLanguage: 'zh-CN',
       loader: {
         provide: TranslateLoader,
         useFactory: HttpLoaderFactory,
@@ -58,17 +55,10 @@ const HttpLoaderFactory = (http: HttpClient) => {
     { provide: RouteReuseStrategy, useClass: CustomReuseStrategy },
     {
       provide: NZ_I18N,
-      useFactory: (localId: string) => {
-        switch (localId) {
-          case 'en-US':
-            return en_US
-          default:
-            return zh_CN
-        }
-      },
-      deps: [LOCALE_ID]
+      useValue: zh_CN
     },
-    { provide: LOCALE_ID, useValue: environment.LOCALE },
+    { provide: NZ_DATE_LOCALE, useValue: zhCN },
+    { provide: LOCALE_ID, useValue: 'zh-CN' },
     { provide: NZ_CONFIG, useValue: ngZorroConfig },
     { provide: HTTP_INTERCEPTORS, useClass: Interceptor, multi: true }
   ],
