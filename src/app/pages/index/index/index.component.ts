@@ -25,7 +25,6 @@ import type { MenuDataItemType } from '@/app/pages/personal-center/types'
 import { GET_ACTIVE_ROUTE, GET_ACTIVE_ROUTE_TYPE } from '@/app/shared/utils/getActiveRoute'
 import { ColorPickerComponent, ColorType } from '@/app/shared/color-picker/color-picker.component'
 import { slideInAnimation } from './animations'
-import { filter } from 'rxjs'
 
 import { NzConfigService } from 'ng-zorro-antd/core/config'
 
@@ -79,21 +78,10 @@ export default class IndexComponent implements OnInit {
   logoSvg = 'assets/image/logo.svg'
   systemName = environment.SYSTEM_NAME
   menus: Menu[] = []
-  breadcrumbs: {
-    menuName: string
-  }[] = []
+  breadcrumbs: { menuName: string; url: string }[] = []
 
   getRouteAnimationData() {
     return this.route.snapshot.url
-  }
-
-  getBreadcrumbList() {
-    const { route } = this.getActiveRoute()
-    this.breadcrumbs = [
-      {
-        menuName: route?.snapshot.data['menuName']
-      }
-    ]
   }
 
   colorPickerChange(color: ColorType) {
@@ -107,10 +95,22 @@ export default class IndexComponent implements OnInit {
     return routePath.findIndex((route) => '/' + route.snapshot.routeConfig?.path === path) !== -1
   }
 
+  setBreadcrumbs() {
+    const { routePath } = this.getActiveRoute()
+    this.breadcrumbs = routePath.slice(1).map((item) => ({
+      menuName: item.snapshot.data['menuName'],
+      url: item.snapshot.url.map((item) => item.path).join('/')
+    }))
+  }
+
   ngOnInit(): void {
-    this.getBreadcrumbList()
-    this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe(() => {
-      this.getBreadcrumbList()
+    // 初始面包屑
+    this.setBreadcrumbs()
+    // 路由跳转完成 更新面包屑
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        this.setBreadcrumbs()
+      }
     })
 
     this.menuStore.data.subscribe((menuData) => {

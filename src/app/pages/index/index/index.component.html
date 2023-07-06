@@ -119,9 +119,14 @@
     </nz-sider>
     <nz-layout style="padding: 0 24px 24px">
       <nz-breadcrumb style="margin: 16px 0">
-        <nz-breadcrumb-item *ngFor="let item of breadcrumbs">{{
-          translate.get(item.menuName) | async
-        }}</nz-breadcrumb-item>
+        <nz-breadcrumb-item *ngFor="let item of breadcrumbs; index as i">
+          <a [routerLink]="item.url" *ngIf="i < breadcrumbs.length - 1; else elseBlock">{{
+            translate.get(item.menuName) | async
+          }}</a>
+          <ng-template #elseBlock>
+            {{ translate.get(item.menuName) | async }}
+          </ng-template>
+        </nz-breadcrumb-item>
       </nz-breadcrumb>
       <nz-content [@routeAnimations]="getRouteAnimationData()" class="index-content">
         <router-outlet></router-outlet>
