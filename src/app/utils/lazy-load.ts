@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core'
-import { AppHostDirective } from './host.directive'
-import { PageLoadingComponent } from '../page-loading/page-loading.component'
+import { AppHostDirective } from '@/app/directives/host/host.directive'
+import { PageLoadingComponent } from '@/app/components/page-loading/page-loading.component'
 
 export const lazyLoad = (moduleName: string, componentName: string) => {
   // TODO fix ID 重复
@@ -15,12 +15,10 @@ export const lazyLoad = (moduleName: string, componentName: string) => {
 
     ngOnInit(): void {
       this.appHost.viewContainerRef.createComponent(PageLoadingComponent)
-      import(`../../pages/${moduleName}/${componentName}/${componentName}.component`).then(
-        (res) => {
-          this.appHost.viewContainerRef.clear()
-          this.appHost.viewContainerRef.createComponent(res.default)
-        }
-      )
+      import(`../pages/${moduleName}/${componentName}/${componentName}.component`).then((res) => {
+        this.appHost.viewContainerRef.clear()
+        this.appHost.viewContainerRef.createComponent(res.default)
+      })
     }
   }
   return LazyLoadComponent

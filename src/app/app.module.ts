@@ -20,7 +20,7 @@ import { Interceptor } from '@/app/http/interceptor'
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core'
 import { TranslateHttpLoader } from '@ngx-translate/http-loader'
 
-import { CustomReuseStrategy } from '@/app/shared/utils/CustomReuseStrategy'
+import { CustomReuseStrategy } from '@/app/utils/custom-reuse-strategy'
 
 registerLocaleData(zh)
 

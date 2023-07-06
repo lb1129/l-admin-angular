@@ -8,7 +8,7 @@ import { TranslateService } from '@ngx-translate/core'
 import { en_US, zh_CN, NzI18nService } from 'ng-zorro-antd/i18n'
 import { enUS, zhCN } from 'date-fns/locale'
 
-import { localeLocalforage } from '@/app/storage/localforage'
+import { LocaleLocalforage } from '@/app/storage/localforage'
 
 @Component({
   imports: [NzDropDownModule, NzIconModule, NzMenuModule],
@@ -40,10 +40,14 @@ import { localeLocalforage } from '@/app/storage/localforage'
 export class ToggleLanguageComponent implements OnInit {
   @Input() appClass!: string
 
-  constructor(public translate: TranslateService, private nzI18nService: NzI18nService) {}
+  constructor(
+    public translate: TranslateService,
+    private nzI18nService: NzI18nService,
+    private localeLocalforage: LocaleLocalforage
+  ) {}
 
   async ngOnInit() {
-    const locale = await localeLocalforage.get()
+    const locale = await this.localeLocalforage.get()
     if (locale && this.translate.defaultLang !== locale) this.setLocale(locale)
   }
 
@@ -55,6 +59,6 @@ export class ToggleLanguageComponent implements OnInit {
 
   changeHandler(locale: string) {
     this.setLocale(locale)
-    localeLocalforage.set(locale)
+    this.localeLocalforage.set(locale)
   }
 }

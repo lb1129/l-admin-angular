@@ -18,7 +18,7 @@ import { PersonalCenterService } from '@/app/pages/personal-center/service'
 import { MenuStore } from '@/app/stores/menu'
 import { UserInfoStore } from '@/app/stores/userInfo'
 
-import { tokenLocalforage } from '@/app/storage/localforage'
+import { TokenLocalforage } from '@/app/storage/localforage'
 import { TranslateService } from '@ngx-translate/core'
 
 @Component({
@@ -49,7 +49,8 @@ export default class LoginComponent {
     private notification: NzNotificationService,
     private menuStore: MenuStore,
     private userInfoStore: UserInfoStore,
-    public translate: TranslateService
+    public translate: TranslateService,
+    public tokenLocalforage: TokenLocalforage
   ) {
     this.form = this.fb.group({
       userName: ['', Validators.required],
@@ -63,7 +64,7 @@ export default class LoginComponent {
       const value = this.form.value
       this.authenticateService.login(value).subscribe({
         next: async (res) => {
-          await tokenLocalforage.set(res.data)
+          await this.tokenLocalforage.set(res.data)
           // 获取菜单
           this.personalCenterService.getMenu().subscribe((menuRes) => {
             // 更新 menu store

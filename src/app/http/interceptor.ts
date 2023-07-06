@@ -1,14 +1,14 @@
-import { Injectable, Inject } from '@angular/core'
+import { Injectable } from '@angular/core'
 import { HttpInterceptor, HttpHandler, HttpRequest, HttpResponse } from '@angular/common/http'
 import { Router } from '@angular/router'
 import { environment } from '@/environments/environment'
 import queryString from 'query-string'
 import { catchError, map, switchMap } from 'rxjs/operators'
 import { NzMessageService } from 'ng-zorro-antd/message'
-import { tokenLocalforage } from '@/app/storage/localforage'
+import { TokenLocalforage } from '@/app/storage/localforage'
 import { Observable, ReplaySubject, delay } from 'rxjs'
 import isAuthenticated from '@/app/auth/isAuthenticated'
-import { GET_ACTIVE_ROUTE, GET_ACTIVE_ROUTE_TYPE } from '@/app/shared/utils/getActiveRoute'
+import { RouteTools } from '@/app/utils/route-tools'
 import { NzI18nService } from 'ng-zorro-antd/i18n'
 
 @Injectable()
@@ -16,15 +16,16 @@ export class Interceptor implements HttpInterceptor {
   constructor(
     private message: NzMessageService,
     private router: Router,
-    @Inject(GET_ACTIVE_ROUTE) private getActiveRoute: GET_ACTIVE_ROUTE_TYPE,
-    private nzI18nService: NzI18nService
+    private routeTools: RouteTools,
+    private nzI18nService: NzI18nService,
+    private tokenLocalforage: TokenLocalforage
   ) {}
 
   // 支持异步处理req
   handleReq(req: HttpRequest<any>) {
     return new Observable<HttpRequest<any>>((observer) => {
       ;(async () => {
-        const token = await tokenLocalforage.get()
+        const token = await this.tokenLocalforage.get()
         const newReq = req.clone({
           url: environment.SERVER_IS_MOCK
             ? queryString.stringifyUrl({
@@ -74,10 +75,10 @@ export class Interceptor implements HttpInterceptor {
       }),
       // 错误处理
       catchError(async (error) => {
-        const { route } = this.getActiveRoute()
+        const { route } = this.routeTools.getActiveRoute()
         if (error.status === 401) {
           if (route.snapshot.data && route.snapshot.data['needAuth'] === true) {
-            await tokenLocalforage.clear()
+            await this.tokenLocalforage.clear()
             const subject = new ReplaySubject<boolean>(1)
             isAuthenticated.value = subject
             subject.next(false)

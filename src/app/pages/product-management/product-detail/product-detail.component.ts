@@ -9,7 +9,7 @@ import { NzButtonModule } from 'ng-zorro-antd/button'
 import type { ProductType } from '../types'
 import { ProductService } from '../services'
 
-import { Auth } from '@/app/auth/auth'
+import { AuthService } from '@/app/auth/service'
 
 import { TranslateService } from '@ngx-translate/core'
 
@@ -32,7 +32,7 @@ export default class ProductDetailComponent implements OnInit {
     private location: Location,
     private route: ActivatedRoute,
     private productService: ProductService,
-    public auth: Auth,
+    public auth: AuthService,
     public translate: TranslateService
   ) {}
   details: ProductType = {

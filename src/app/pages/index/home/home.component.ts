@@ -1,8 +1,8 @@
 import { AfterViewInit, Component, ElementRef, ViewChild, NgZone } from '@angular/core'
 import PositionMapComponent, {
   type PositionInfo
-} from '@/app/shared/position-map/position-map.component'
-import { ResizeDirective } from '@/app/shared/utils/resize.directive'
+} from '@/app/components/position-map/position-map.component'
+import { ResizeDirective } from '@/app/directives/resize/resize.directive'
 import * as echarts from 'echarts/core'
 import { GridComponent, TooltipComponent } from 'echarts/components'
 import { BarChart } from 'echarts/charts'

@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common'
 import { environment } from '@/environments/environment'
 import { NzDividerModule } from 'ng-zorro-antd/divider'
 
-import { ToggleLanguageComponent } from '@/app/shared/toggle-language/toggle-language.component'
+import { ToggleLanguageComponent } from '@/app/components/toggle-language/toggle-language.component'
 
 import { TranslateService } from '@ngx-translate/core'
 

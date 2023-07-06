@@ -3,8 +3,8 @@ import { RouterModule, Routes } from '@angular/router'
 import { environment } from '@/environments/environment'
 import { authGuard } from '@/app/auth/guard'
 
-import { PageLoadingComponent } from '@/app/shared/page-loading/page-loading.component'
-import { lazyLoad } from '@/app/shared/utils/lazyLoad'
+import { PageLoadingComponent } from '@/app/components/page-loading/page-loading.component'
+import { lazyLoad } from '@/app/utils/lazy-load'
 
 const baseRoutes: Routes = [
   {

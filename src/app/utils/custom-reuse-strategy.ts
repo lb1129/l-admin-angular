@@ -1,7 +1,5 @@
 import { ActivatedRouteSnapshot, DetachedRouteHandle, RouteReuseStrategy } from '@angular/router'
-import { Directive } from '@angular/core'
 
-@Directive()
 export class CustomReuseStrategy implements RouteReuseStrategy {
   private cacheRouters = new Map<string, DetachedRouteHandle>()
 

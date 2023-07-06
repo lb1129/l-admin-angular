@@ -7,8 +7,8 @@ import { PersonalCenterService } from '@/app/pages/personal-center/service'
 import { MenuStore } from '@/app/stores/menu'
 import { UserInfoStore } from '@/app/stores/userInfo'
 import type { MenuDataItemType } from '@/app/pages/personal-center/types'
-import { lazyLoad } from '@/app/shared/utils/lazyLoad'
-import { GET_ACTIVE_ROUTE, GET_ACTIVE_ROUTE_TYPE } from '@/app/shared/utils/getActiveRoute'
+import { lazyLoad } from '@/app/utils/lazy-load'
+import { RouteTools } from '@/app/utils/route-tools'
 
 import { cloneDeep } from 'lodash-es'
 
@@ -24,7 +24,7 @@ export class AppComponent implements OnInit {
     private menuStore: MenuStore,
     private userInfoStore: UserInfoStore,
     private router: Router,
-    @Inject(GET_ACTIVE_ROUTE) private getActiveRoute: GET_ACTIVE_ROUTE_TYPE
+    private routeTools: RouteTools
   ) {}
 
   getChildrenPath(path: string) {
@@ -126,7 +126,7 @@ export class AppComponent implements OnInit {
       // 重设路由
       this.router.resetConfig(baseRoutes)
       // 触发重新匹配
-      const { route } = this.getActiveRoute()
+      const { route } = this.routeTools.getActiveRoute()
       if (route.snapshot.routeConfig?.path === '**')
         this.router.navigateByUrl(this.router.url, { replaceUrl: true })
     })

@@ -5,9 +5,10 @@ import {
   ViewChild,
   EventEmitter,
   Output,
-  NgZone
+  NgZone,
+  ChangeDetectionStrategy
 } from '@angular/core'
-import { ResizeDirective, type ResizeChangeRes } from '@/app/shared/utils/resize.directive'
+import { ResizeDirective, type ResizeChangeRes } from '@/app/directives/resize/resize.directive'
 
 export interface PositionInfo {
   province: string
@@ -24,7 +25,8 @@ export interface PositionInfo {
   selector: 'app-position-map',
   templateUrl: './position-map.component.html',
   styleUrls: ['./position-map.component.less'],
-  standalone: true
+  standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export default class PositionMapComponent implements AfterViewInit {
   @ViewChild('nodeRef') nodeRef!: ElementRef<HTMLDivElement>

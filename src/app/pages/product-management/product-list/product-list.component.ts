@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core'
+import { Component } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { Router, RouterModule } from '@angular/router'
 import { NzTableModule, NzTableQueryParams } from 'ng-zorro-antd/table'
@@ -12,9 +12,9 @@ import { NzMessageService } from 'ng-zorro-antd/message'
 import type { ProductType } from '../types'
 import { ProductService } from '../services'
 
-import { ResizeDirective, type ResizeChangeRes } from '@/app/shared/utils/resize.directive'
+import { ResizeDirective, type ResizeChangeRes } from '@/app/directives/resize/resize.directive'
 
-import { Auth } from '@/app/auth/auth'
+import { AuthService } from '@/app/auth/service'
 
 import { TranslateService } from '@ngx-translate/core'
 
@@ -49,7 +49,7 @@ export default class ProductListComponent {
     private router: Router,
     private productService: ProductService,
     private message: NzMessageService,
-    public auth: Auth,
+    public auth: AuthService,
     public translate: TranslateService
   ) {}
 

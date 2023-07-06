@@ -1,4 +1,4 @@
-import { Component } from '@angular/core'
+import { ChangeDetectionStrategy, Component } from '@angular/core'
 import { NzSpinModule } from 'ng-zorro-antd/spin'
 
 @Component({
@@ -6,6 +6,7 @@ import { NzSpinModule } from 'ng-zorro-antd/spin'
   selector: 'app-page-loading',
   templateUrl: './page-loading.component.html',
   styleUrls: ['./page-loading.component.less'],
-  standalone: true
+  standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PageLoadingComponent {}

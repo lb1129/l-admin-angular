@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core'
+import { Component, OnInit } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { RouterModule, Router, ActivatedRoute, NavigationEnd } from '@angular/router'
 
@@ -15,20 +15,23 @@ import { NzMessageService } from 'ng-zorro-antd/message'
 import { UserInfoStore } from '@/app/stores/userInfo'
 
 import { AuthenticateService } from '@/app/pages/authenticate/services'
-import { tokenLocalforage } from '@/app/storage/localforage'
+import { TokenLocalforage } from '@/app/storage/localforage'
 
 import { environment } from '@/environments/environment'
 
 import { MenuStore } from '@/app/stores/menu'
 import type { MenuDataItemType } from '@/app/pages/personal-center/types'
 
-import { GET_ACTIVE_ROUTE, GET_ACTIVE_ROUTE_TYPE } from '@/app/shared/utils/getActiveRoute'
-import { ColorPickerComponent, ColorType } from '@/app/shared/color-picker/color-picker.component'
+import { RouteTools } from '@/app/utils/route-tools'
+import {
+  ColorPickerComponent,
+  ColorType
+} from '@/app/components/color-picker/color-picker.component'
 import { slideInAnimation } from './animations'
 
 import { NzConfigService } from 'ng-zorro-antd/core/config'
 
-import { ToggleLanguageComponent } from '@/app/shared/toggle-language/toggle-language.component'
+import { ToggleLanguageComponent } from '@/app/components/toggle-language/toggle-language.component'
 
 import { TranslateService } from '@ngx-translate/core'
 
@@ -70,9 +73,10 @@ export default class IndexComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private menuStore: MenuStore,
-    @Inject(GET_ACTIVE_ROUTE) private getActiveRoute: GET_ACTIVE_ROUTE_TYPE,
     public nzConfigService: NzConfigService,
-    public translate: TranslateService
+    public translate: TranslateService,
+    public tokenLocalforage: TokenLocalforage,
+    public routeTools: RouteTools
   ) {}
   isCollapsed = false
   logoSvg = 'assets/image/logo.svg'
@@ -92,12 +96,12 @@ export default class IndexComponent implements OnInit {
   }
 
   getSubmenuOpen(path: string) {
-    const { routePath } = this.getActiveRoute()
+    const { routePath } = this.routeTools.getActiveRoute()
     return routePath.findIndex((route) => '/' + route.snapshot.routeConfig?.path === path) !== -1
   }
 
   setBreadcrumbs() {
-    const { routePath } = this.getActiveRoute()
+    const { routePath } = this.routeTools.getActiveRoute()
     this.breadcrumbs = routePath.slice(1).map((item) => ({
       menuName: item.snapshot.data['menuName'],
       url: item.snapshot.url.map((item) => item.path).join('/')
@@ -162,7 +166,7 @@ export default class IndexComponent implements OnInit {
             })
             this.authenticateService.logout().subscribe({
               next: () => {
-                tokenLocalforage.clear()
+                this.tokenLocalforage.clear()
                 this.message.remove(messageRef.messageId)
                 this.router.navigate(['login'], { replaceUrl: true })
               },

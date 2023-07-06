@@ -1,6 +1,10 @@
+import { Injectable } from '@angular/core'
 import { testData } from './keys'
 
-export const testSeesion = {
+@Injectable({
+  providedIn: 'root'
+})
+export class TestSeesion {
   get() {
     let result: object
     const value = sessionStorage.getItem(testData)
@@ -14,10 +18,10 @@ export const testSeesion = {
       result = {}
     }
     return result
-  },
+  }
   set(value: object) {
     sessionStorage.setItem(testData, JSON.stringify(value))
-  },
+  }
   clear() {
     sessionStorage.removeItem(testData)
   }
