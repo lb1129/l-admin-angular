@@ -7,6 +7,7 @@ import { NzMessageModule } from 'ng-zorro-antd/message'
 import { ArrowLeftOutline } from '@ant-design/icons-angular/icons'
 
 import ProductAddOrEditComponent from './product-add-or-edit.component'
+import { TranslateModule } from '@ngx-translate/core'
 
 describe('ProductAddOrEditComponent', () => {
   let component: ProductAddOrEditComponent
@@ -14,7 +15,11 @@ describe('ProductAddOrEditComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [NzIconModule.forRoot([ArrowLeftOutline]), NzMessageModule],
+      imports: [
+        NzIconModule.forRoot([ArrowLeftOutline]),
+        NzMessageModule,
+        TranslateModule.forRoot()
+      ],
       providers: [provideRouter([]), provideHttpClient()]
     })
     fixture = TestBed.createComponent(ProductAddOrEditComponent)

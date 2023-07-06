@@ -6,13 +6,15 @@ import { provideHttpClient } from '@angular/common/http'
 import { NzMessageModule } from 'ng-zorro-antd/message'
 import ProductListComponent from './product-list.component'
 
+import { TranslateModule } from '@ngx-translate/core'
+
 describe('ProductListComponent', () => {
   let component: ProductListComponent
   let fixture: ComponentFixture<ProductListComponent>
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [NzMessageModule],
+      imports: [NzMessageModule, TranslateModule.forRoot()],
       providers: [provideRouter([]), provideAnimations(), provideHttpClient()]
     })
     fixture = TestBed.createComponent(ProductListComponent)

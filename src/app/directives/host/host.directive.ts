@@ -4,6 +4,6 @@ import { Directive, ViewContainerRef } from '@angular/core'
   selector: '[appHost]',
   standalone: true
 })
-export class AppHostDirective {
+export class HostDirective {
   constructor(public viewContainerRef: ViewContainerRef) {}
 }

@@ -1,19 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing'
 
-import { PageLoadingComponent } from './page-loading.component'
-
-import { TranslateModule } from '@ngx-translate/core'
+import { ColorPickerComponent } from './color-picker.component'
 
 describe('PageLoadingComponent', () => {
-  let component: PageLoadingComponent
-  let fixture: ComponentFixture<PageLoadingComponent>
+  let component: ColorPickerComponent
+  let fixture: ComponentFixture<ColorPickerComponent>
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [TranslateModule.forRoot()],
       providers: []
     })
-    fixture = TestBed.createComponent(PageLoadingComponent)
+    fixture = TestBed.createComponent(ColorPickerComponent)
     component = fixture.componentInstance
     fixture.detectChanges()
   })

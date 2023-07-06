@@ -13,27 +13,7 @@ import { LocaleLocalforage } from '@/app/storage/localforage'
 @Component({
   imports: [NzDropDownModule, NzIconModule, NzMenuModule],
   selector: 'app-toggle-language',
-  template: `<span nz-dropdown [nzDropdownMenu]="menu" [class]="appClass">
-      <span nz-icon nzType="global" style="font-size: 16px"></span>
-    </span>
-    <nz-dropdown-menu #menu>
-      <ul nz-menu>
-        <li
-          nz-menu-item
-          (click)="changeHandler('zh-CN')"
-          [nzSelected]="translate.defaultLang === 'zh-CN'"
-        >
-          简体中文
-        </li>
-        <li
-          nz-menu-item
-          (click)="changeHandler('en-US')"
-          [nzSelected]="translate.defaultLang === 'en-US'"
-        >
-          English
-        </li>
-      </ul>
-    </nz-dropdown-menu>`,
+  templateUrl: './toggle-language.component.html',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush
 })

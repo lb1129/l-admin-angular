@@ -5,9 +5,17 @@ import { provideAnimations } from '@angular/platform-browser/animations'
 
 import { NzIconModule } from 'ng-zorro-antd/icon'
 import { NzMessageModule } from 'ng-zorro-antd/message'
-import { UserOutline, DashboardOutline, ShopOutline } from '@ant-design/icons-angular/icons'
+import {
+  UserOutline,
+  DashboardOutline,
+  ShopOutline,
+  GlobalOutline,
+  BgColorsOutline
+} from '@ant-design/icons-angular/icons'
 
 import IndexComponent from './index.component'
+
+import { TranslateModule } from '@ngx-translate/core'
 
 describe('IndexComponent', () => {
   let component: IndexComponent
@@ -16,8 +24,15 @@ describe('IndexComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
-        NzIconModule.forRoot([UserOutline, DashboardOutline, ShopOutline]),
-        NzMessageModule
+        NzIconModule.forRoot([
+          UserOutline,
+          DashboardOutline,
+          ShopOutline,
+          GlobalOutline,
+          BgColorsOutline
+        ]),
+        NzMessageModule,
+        TranslateModule.forRoot()
       ],
       providers: [provideRouter([]), provideAnimations(), provideHttpClient()]
     })
