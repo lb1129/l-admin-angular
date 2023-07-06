@@ -1,7 +1,6 @@
 export const environment = {
   ENV: 'development',
-  SYSTEM_NAME: 'l-admin',
+  SYSTEM_NAME: 'l-admin-angular',
   NOT_SUPPORT_HISTORY: false,
-  SERVER_IS_MOCK: true,
-  LOCALE: 'zh-CN'
+  SERVER_IS_MOCK: true
 }
