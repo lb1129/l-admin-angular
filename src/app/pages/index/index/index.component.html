@@ -13,7 +13,7 @@
       </span>
       <nz-dropdown-menu #colorPickerMenu>
         <app-color-picker
-          appValue="#1890ff"
+          [appValue]="themeColor"
           (appChange)="colorPickerChange($event)"
           [appPresets]="[
             '#1677ff',

@@ -35,6 +35,9 @@ import { ToggleLanguageComponent } from '@/app/components/toggle-language/toggle
 
 import { TranslateService } from '@ngx-translate/core'
 
+import { ThemeLocalforage } from '@/app/storage/localforage'
+import { ThemeStore } from '@/app/stores/theme'
+
 interface Menu {
   title: string
   path?: string
@@ -76,7 +79,9 @@ export default class IndexComponent implements OnInit {
     public nzConfigService: NzConfigService,
     public translate: TranslateService,
     public tokenLocalforage: TokenLocalforage,
-    public routeTools: RouteTools
+    public routeTools: RouteTools,
+    private themeLocalforage: ThemeLocalforage,
+    public themeStore: ThemeStore
   ) {}
   isCollapsed = false
   logoSvg = 'assets/image/logo.svg'
@@ -84,6 +89,7 @@ export default class IndexComponent implements OnInit {
   menus: Menu[] = []
   breadcrumbs: { menuName: string; url: string }[] = []
   userName = ''
+  themeColor!: string
 
   getRouteAnimationData() {
     return this.route.snapshot.url
@@ -93,6 +99,7 @@ export default class IndexComponent implements OnInit {
     this.nzConfigService.set('theme', {
       primaryColor: color.hex
     })
+    this.themeLocalforage.set(color.hex)
   }
 
   getSubmenuOpen(path: string) {
@@ -109,6 +116,12 @@ export default class IndexComponent implements OnInit {
   }
 
   ngOnInit() {
+    // 订阅主题色
+    this.themeStore.data.subscribe((themeColor) => {
+      this.themeColor = themeColor
+    })
+
+    // 订阅用户信息
     this.userInfoStore.data.subscribe((userInfo) => {
       this.userName = userInfo.userName
     })
