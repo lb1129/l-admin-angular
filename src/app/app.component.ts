@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core'
+import { Component, OnInit } from '@angular/core'
 import { Route, Data, Router } from '@angular/router'
 
 import { AuthenticateService } from '@/app/pages/authenticate/services'
@@ -12,6 +12,11 @@ import { RouteTools } from '@/app/utils/route-tools'
 
 import { cloneDeep } from 'lodash-es'
 
+import { ThemeLocalforage } from '@/app/storage/localforage'
+import { ThemeStore } from '@/app/stores/theme'
+
+import { NzConfigService } from 'ng-zorro-antd/core/config'
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -24,7 +29,10 @@ export class AppComponent implements OnInit {
     private menuStore: MenuStore,
     private userInfoStore: UserInfoStore,
     private router: Router,
-    private routeTools: RouteTools
+    private routeTools: RouteTools,
+    private themeLocalforage: ThemeLocalforage,
+    private themeStore: ThemeStore,
+    private nzConfigService: NzConfigService
   ) {}
 
   getChildrenPath(path: string) {
@@ -35,6 +43,15 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
+    // 主题色初始化
+    this.themeLocalforage.get().then((theme) => {
+      if (theme) {
+        this.themeStore.setData(theme)
+        this.nzConfigService.set('theme', {
+          primaryColor: theme
+        })
+      }
+    })
     // 已登录 初始菜单数据 用户信息
     this.authenticateService.isLogin().subscribe({
       next: () => {
