@@ -79,6 +79,7 @@ export default class IndexComponent implements OnInit {
   systemName = environment.SYSTEM_NAME
   menus: Menu[] = []
   breadcrumbs: { menuName: string; url: string }[] = []
+  userName = ''
 
   getRouteAnimationData() {
     return this.route.snapshot.url
@@ -103,7 +104,11 @@ export default class IndexComponent implements OnInit {
     }))
   }
 
-  ngOnInit(): void {
+  ngOnInit() {
+    this.userInfoStore.data.subscribe((userInfo) => {
+      this.userName = userInfo.userName
+    })
+
     // 初始面包屑
     this.setBreadcrumbs()
     // 路由跳转完成 更新面包屑
