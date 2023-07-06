@@ -67,7 +67,7 @@ export class ColorPickerComponent implements OnChanges {
       tinycolorInstance = tinycolor(data)
     }
 
-    const hex = tinycolorInstance.toHex()
+    const hex = tinycolorInstance.toHexString()
     const hsl = tinycolorInstance.toHsl()
     const hsv = tinycolorInstance.toHsv()
     const rgba = tinycolorInstance.toRgb()
@@ -79,7 +79,7 @@ export class ColorPickerComponent implements OnChanges {
       rgba
     }
   }
-  innerValue = this.toInnerValue(this.appValue)
+  innerValue!: ColorType
 
   ngOnChanges() {
     this.innerValue = this.toInnerValue(this.appValue)
