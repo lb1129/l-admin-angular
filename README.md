@@ -26,6 +26,7 @@
 
 ## 特性
 
+- standalone 模式
 - 在线主题色切换
 - 在线多语言切换
 - 懒加载
@@ -33,9 +34,8 @@
 - 动态路由（用户有多少菜单，则挂多少路由）
 - 登录跳转控制
 - 操作权限控制
-- 路由动画（自动切换）
-- 路由组件 keep-alive（自动处理）
-- 按模块拆分 server，各模块中复用
+- ~~路由动画（自动切换）~~
+- 路由组件 keep-alive
 - LESS
 - Typescript
 
@@ -53,10 +53,10 @@ git clone https://github.com/lb1129/l-admin-angular.git
 cd l-admin-angular
 
 # 安装依赖
-npm install
+npm i
 
 # 启动服务
-npm run start
+npm run start | ng serve
 ```
 
 浏览器访问 http://localhost:4200
@@ -65,7 +65,7 @@ npm run start
 
 ```sh
 # 构建生产环境
-npm run build
+npm run build | ng build
 ```
 
 ## 权限控制流程
