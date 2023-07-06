@@ -44,7 +44,7 @@ interface Column {
   styleUrls: ['./product-list.component.less'],
   standalone: true
 })
-export default class ProductListComponent implements OnInit {
+export default class ProductListComponent {
   constructor(
     private router: Router,
     private productService: ProductService,
@@ -113,10 +113,6 @@ export default class ProductListComponent implements OnInit {
       width: '150px'
     }
   ]
-
-  ngOnInit(): void {
-    this.auth.init()
-  }
 
   addHandler() {
     this.router.navigate(['/productManagement/productAddOrEdit'])

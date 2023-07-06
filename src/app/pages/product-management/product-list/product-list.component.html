@@ -7,15 +7,13 @@
       nz-button
       nzType="primary"
       (click)="addHandler()"
-      [disabled]="auth.operateAuthValueToDisabled(auth.operateAuth.add)"
+      [disabled]="auth.getOperateAuth('add') | async"
     >
       {{ translate.get('add') | async }}
     </button>
     <button
       nz-button
-      [disabled]="
-        setOfCheckedId.size <= 0 || auth.operateAuthValueToDisabled(auth.operateAuth.delete)
-      "
+      [disabled]="setOfCheckedId.size <= 0 || (auth.getOperateAuth('delete') | async)"
       nz-popconfirm
       [nzPopconfirmTitle]="translate.get('areYouSureDelete') | async"
       (nzOnConfirm)="deleteHandler()"
@@ -97,7 +95,7 @@
             <a
               nz-button
               nzType="link"
-              [disabled]="auth.operateAuthValueToDisabled(auth.operateAuth.detail)"
+              [disabled]="auth.getOperateAuth('detail') | async"
               style="padding: 0"
               [routerLink]="['/productManagement/productDetail/', data.id]"
               >{{ data[column.dataIndex] }}</a
@@ -109,7 +107,7 @@
           <a
             nz-button
             nzType="link"
-            [disabled]="auth.operateAuthValueToDisabled(auth.operateAuth.edit)"
+            [disabled]="auth.getOperateAuth('edit') | async"
             [routerLink]="['/productManagement/productAddOrEdit/', data.id]"
             >{{ translate.get('edit') | async }}</a
           >
@@ -117,7 +115,7 @@
           <a
             nz-button
             nzType="link"
-            [disabled]="auth.operateAuthValueToDisabled(auth.operateAuth.delete)"
+            [disabled]="auth.getOperateAuth('delete') | async"
             nz-popconfirm
             [nzPopconfirmTitle]="translate.get('areYouSureDelete') | async"
             (nzOnConfirm)="deleteHandler(data.id)"

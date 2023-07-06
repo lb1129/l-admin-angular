@@ -3,7 +3,7 @@
     <button
       nz-button
       nzType="primary"
-      [disabled]="auth.operateAuthValueToDisabled(auth.operateAuth.edit)"
+      [disabled]="auth.getOperateAuth('edit') | async"
       (click)="editHandler()"
     >
       {{ translate.get('edit') | async }}

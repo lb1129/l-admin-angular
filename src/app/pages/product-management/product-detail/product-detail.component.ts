@@ -66,7 +66,6 @@ export default class ProductDetailComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.auth.init()
     this.loadData()
   }
 
