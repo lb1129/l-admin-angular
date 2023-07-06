@@ -10,6 +10,8 @@ import type { MenuDataItemType } from '@/app/pages/personal-center/types'
 import { lazyLoad } from '@/app/shared/utils/lazyLoad'
 import { GET_ACTIVE_ROUTE, GET_ACTIVE_ROUTE_TYPE } from '@/app/shared/utils/getActiveRoute'
 
+import { cloneDeep } from 'lodash-es'
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -74,6 +76,7 @@ export class AppComponent implements OnInit {
             }
             res.push({
               path,
+              data: { needAuth: true, menuName: record.name },
               children: generateRoutes(children, redirectRoute)
             })
           } else if (record.pageUrl) {
@@ -109,7 +112,7 @@ export class AppComponent implements OnInit {
       }
       const routes = generateRoutes(menuData)
 
-      const baseRoutes = this.router.config
+      const baseRoutes = cloneDeep(this.router.config)
       // 将动态路由插入
       const insertTo = baseRoutes[0].children
       if (insertTo && insertTo.length) {
@@ -121,7 +124,7 @@ export class AppComponent implements OnInit {
       baseRoutes[baseRoutes.length - 1].loadComponent = () =>
         import('./pages/sundry/not-found/not-found.component')
       // 重设路由
-      this.router.resetConfig([...baseRoutes])
+      this.router.resetConfig(baseRoutes)
       // 触发重新匹配
       const { route } = this.getActiveRoute()
       if (route.snapshot.routeConfig?.path === '**')
