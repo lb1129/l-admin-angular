@@ -1,6 +1,6 @@
 import { inject } from '@angular/core'
 import { ActivatedRouteSnapshot, Router } from '@angular/router'
-import isAuthenticated from '@/app/auth/isAuthenticated'
+import isAuthenticated from './isAuthenticated'
 import { map } from 'rxjs'
 
 // 是否已登录跳转控制
