@@ -7,8 +7,8 @@ export class CustomReuseStrategy implements RouteReuseStrategy {
 
   // 确定是否应复用路由
   shouldReuseRoute(future: ActivatedRouteSnapshot, curr: ActivatedRouteSnapshot): boolean {
-    // 如果future是隐藏路由 那当前路由就分离
-    let children = [...future.children]
+    // 如果curr是菜单路由 那路由就分离
+    let children = [...curr.children]
     while (children.length) {
       const record = children.pop()
       if (record) {
@@ -16,7 +16,7 @@ export class CustomReuseStrategy implements RouteReuseStrategy {
         if (child && child.length) {
           children = [...child, ...children]
         } else {
-          if (record.data['hidden'] === true) {
+          if (!record.data['hidden']) {
             this.needDetach = true
           } else {
             this.needDetach = false
@@ -35,6 +35,8 @@ export class CustomReuseStrategy implements RouteReuseStrategy {
 
   // 存储分离的路由
   store(route: ActivatedRouteSnapshot, handle: DetachedRouteHandle): void {
+    // 仅缓存一个
+    this.cacheRouters.clear()
     this.cacheRouters.set(this.getFullRouteURL(route), handle)
   }
 
