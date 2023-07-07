@@ -91,10 +91,6 @@ export default class IndexComponent implements OnInit {
   userName = ''
   themeColor!: string
 
-  getRouteAnimationData() {
-    return this.route.snapshot.url
-  }
-
   colorPickerChange(color: ColorType) {
     this.nzConfigService.set('theme', {
       primaryColor: color.hex
