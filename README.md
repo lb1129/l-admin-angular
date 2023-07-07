@@ -34,10 +34,12 @@
 - 动态路由（用户有多少菜单，则挂多少路由）
 - 登录跳转控制
 - 操作权限控制
-- ~~路由动画（自动切换）~~
+- ~~路由动画~~
 - 路由组件 keep-alive
 - LESS
 - Typescript
+
+关于路由动画（根据前进后退自动切换动画），由于浏览器的限制，popstate | hashchange 事件仅能知悉历史记录有变化，无法知悉用户到底点击了浏览器的前进还是后退按钮；已处理过的方案：url 上携带 query 唯一标识（支持 hisotry 模式或 hash 模式），在内存中维护一份路由历史，在路由跳转时（结合路由库 vue-router@4.2.0的 beforeEach, react-router@6.11.2的 subscribe, @angular/router@16.1.0的 RouteReuseStrategy），去路由历史中查找是否存在该 url，如果有为后退操作，如果没有为前进操作并加入路由历史并在 sessionStorage 中存一份，在浏览器刷新时还原路由历史；该方案缺点：url 上会携带额外 query
 
 ## 在线预览
 
