@@ -44,7 +44,7 @@ Mock.mock(/api\/getProducts\?.*/, 'post', (req) => {
     total = data.length
   }
   const { pageNo, pageSize } = pagination
-  data = data.slice((pageNo - 1) * pageSize, pageNo * pageSize - 1)
+  data = data.slice((pageNo - 1) * pageSize, pageNo * pageSize)
   return response({
     pageNo,
     pageSize,
