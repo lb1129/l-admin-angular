@@ -68,11 +68,13 @@ const baseRoutes: Routes = [
   },
   {
     path: 'privacyPolicy',
+    canActivate: [authGuard],
     component: lazyLoad('sundry', 'privacy-policy')
     // loadComponent: () => import('./pages/sundry/privacy-policy/privacy-policy.component')
   },
   {
     path: '**',
+    canActivate: [authGuard],
     component: PageLoadingComponent
   }
 ]
