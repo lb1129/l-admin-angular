@@ -1,12 +1,13 @@
 import { AfterViewInit, Component, ElementRef, ViewChild, NgZone } from '@angular/core'
-import PositionMapComponent, {
-  type PositionInfo
-} from '@/app/components/position-map/position-map.component'
-import { ResizeDirective } from '@/app/directives/resize/resize.directive'
 import * as echarts from 'echarts/core'
 import { GridComponent, TooltipComponent } from 'echarts/components'
 import { BarChart } from 'echarts/charts'
 import { CanvasRenderer } from 'echarts/renderers'
+import PositionMapComponent, {
+  type PositionInfo
+} from '@/app/components/position-map/position-map.component'
+import { ResizeDirective } from '@/app/directives/resize/resize.directive'
+
 // echarts 按需加载使用
 echarts.use([GridComponent, TooltipComponent, BarChart, CanvasRenderer])
 

@@ -34,7 +34,7 @@
             ],
             "styles": ["src/styles.less"],
             "scripts": [],
-            "allowedCommonJsDependencies": ["mockjs", "localforage"],
+            "allowedCommonJsDependencies": ["localforage", "fast-xml-parser"],
             "customWebpackConfig": {
               "path": "./extra-webpack.config.ts"
             }

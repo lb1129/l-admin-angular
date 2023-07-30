@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core'
 import { CommonModule } from '@angular/common'
-import { RouterModule, Router, ActivatedRoute, NavigationEnd } from '@angular/router'
-
+import { RouterModule, Router, NavigationEnd } from '@angular/router'
 import { NzLayoutModule } from 'ng-zorro-antd/layout'
 import { NzMenuModule } from 'ng-zorro-antd/menu'
 import { NzBreadCrumbModule } from 'ng-zorro-antd/breadcrumb'
@@ -11,32 +10,23 @@ import { NzToolTipModule } from 'ng-zorro-antd/tooltip'
 import { NzIconModule } from 'ng-zorro-antd/icon'
 import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal'
 import { NzMessageService } from 'ng-zorro-antd/message'
-
-import { UserInfoStore } from '@/app/stores/userInfo'
-
-import { AuthenticateService } from '@/app/pages/authenticate/services'
+import { TranslateService } from '@ngx-translate/core'
+import { AuthService } from '@/app/services/auth.service'
 import { TokenLocalforage } from '@/app/storage/localforage'
-
-import { environment } from '@/environments/environment'
-
-import { MenuStore } from '@/app/stores/menu'
-import type { MenuDataItemType } from '@/app/pages/personal-center/types'
-
-import { RouteTools } from '@/app/utils/route-tools'
 import {
   ColorPickerComponent,
   ColorType
 } from '@/app/components/color-picker/color-picker.component'
-import { slideInAnimation } from './animations'
-
-import { NzConfigService } from 'ng-zorro-antd/core/config'
-
 import { ToggleLanguageComponent } from '@/app/components/toggle-language/toggle-language.component'
-
-import { TranslateService } from '@ngx-translate/core'
-
-import { ThemeLocalforage } from '@/app/storage/localforage'
-import { ThemeStore } from '@/app/stores/theme'
+import { environment } from '@/environments/environment'
+import { RouteTools } from '@/app/utils/route-tools'
+import type { MenuDataItemType } from '@/app/types/menu'
+import { slideInAnimation } from './animations'
+import { Store } from '@ngrx/store'
+import { userInfoSelectors } from '@/app/stores/user-info/selectors'
+import { menuSelectors } from '@/app/stores/menu/selectors'
+import { userInfoActions } from '@/app/stores/user-info/actions'
+import { Theme } from '@/app/utils/theme'
 
 interface Menu {
   title: string
@@ -69,33 +59,27 @@ interface Menu {
 })
 export default class IndexComponent implements OnInit {
   constructor(
-    public userInfoStore: UserInfoStore,
+    private router: Router,
     private modal: NzModalService,
     private message: NzMessageService,
-    private authenticateService: AuthenticateService,
-    private router: Router,
-    private route: ActivatedRoute,
-    private menuStore: MenuStore,
-    public nzConfigService: NzConfigService,
     public translate: TranslateService,
-    public tokenLocalforage: TokenLocalforage,
-    public routeTools: RouteTools,
-    private themeLocalforage: ThemeLocalforage,
-    public themeStore: ThemeStore
+    private authService: AuthService,
+    private store: Store,
+    private tokenLocalforage: TokenLocalforage,
+    private routeTools: RouteTools,
+    private theme: Theme
   ) {}
   isCollapsed = false
   logoSvg = 'assets/image/logo.svg'
   systemName = environment.SYSTEM_NAME
   menus: Menu[] = []
   breadcrumbs: { menuName: string; url: string }[] = []
-  userName = ''
-  themeColor!: string
+  avatar = this.store.select(userInfoSelectors.avatar)
+  nickname = this.store.select(userInfoSelectors.nickname)
+  themeColor = this.theme.get()
 
   colorPickerChange(color: ColorType) {
-    this.nzConfigService.set('theme', {
-      primaryColor: color.hex
-    })
-    this.themeLocalforage.set(color.hex)
+    this.theme.set(color.hex)
   }
 
   getSubmenuOpen(path: string) {
@@ -112,16 +96,6 @@ export default class IndexComponent implements OnInit {
   }
 
   ngOnInit() {
-    // 订阅主题色
-    this.themeStore.data.subscribe((themeColor) => {
-      this.themeColor = themeColor
-    })
-
-    // 订阅用户信息
-    this.userInfoStore.data.subscribe((userInfo) => {
-      this.userName = userInfo.userName
-    })
-
     // 初始面包屑
     this.setBreadcrumbs()
     // 路由跳转完成 更新面包屑
@@ -131,7 +105,7 @@ export default class IndexComponent implements OnInit {
       }
     })
 
-    this.menuStore.data.subscribe((menuData) => {
+    this.store.select(menuSelectors.menuData).subscribe((menuData) => {
       // 格式化 menuData
       const loop = (list: MenuDataItemType[], level: number, parentPath: string) => {
         const result: Menu[] = []
@@ -173,11 +147,12 @@ export default class IndexComponent implements OnInit {
             const messageRef = this.message.loading(messages.signingOutPleaseWait, {
               nzDuration: 0
             })
-            this.authenticateService.logout().subscribe({
+            this.authService.logout().subscribe({
               next: () => {
                 this.tokenLocalforage.clear()
                 this.message.remove(messageRef.messageId)
                 this.router.navigate(['login'], { replaceUrl: true })
+                this.store.dispatch(userInfoActions.resetUserInfo())
               },
               error: () => {
                 this.message.remove(messageRef.messageId)

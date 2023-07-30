@@ -1,4 +1,4 @@
-import { Component } from '@angular/core'
+import { Component, OnInit, OnDestroy } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { Router, RouterModule } from '@angular/router'
 import { NzTableModule, NzTableQueryParams } from 'ng-zorro-antd/table'
@@ -8,15 +8,13 @@ import { NzInputModule } from 'ng-zorro-antd/input'
 import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm'
 import { NzIconModule } from 'ng-zorro-antd/icon'
 import { NzMessageService } from 'ng-zorro-antd/message'
-
-import type { ProductType } from '../types'
-import { ProductService } from '../services'
-
-import { ResizeDirective, type ResizeChangeRes } from '@/app/directives/resize/resize.directive'
-
-import { AuthService } from '@/app/auth/service'
-
 import { TranslateService } from '@ngx-translate/core'
+import { ResizeDirective, type ResizeChangeRes } from '@/app/directives/resize/resize.directive'
+import { AuthService } from '@/app/auth/service'
+import { ProductService } from '@/app/services/product.service'
+import type { ProductType } from '@/app/types/product'
+import { productEditDone } from '@/app/pubsub'
+import { Subscription } from 'rxjs'
 
 interface Column {
   title: string
@@ -44,13 +42,13 @@ interface Column {
   styleUrls: ['./product-list.component.less'],
   standalone: true
 })
-export default class ProductListComponent {
+export default class ProductListComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
+    public translate: TranslateService,
     private productService: ProductService,
     private message: NzMessageService,
-    public auth: AuthService,
-    public translate: TranslateService
+    public auth: AuthService
   ) {}
 
   allChecked = false
@@ -113,6 +111,17 @@ export default class ProductListComponent {
       width: '150px'
     }
   ]
+  productEditDoneSub!: Subscription
+
+  ngOnInit() {
+    this.productEditDoneSub = productEditDone.subscribe(() => {
+      this.loadData()
+    })
+  }
+
+  ngOnDestroy() {
+    this.productEditDoneSub.unsubscribe()
+  }
 
   addHandler() {
     this.router.navigate(['/productManagement/productAddOrEdit'])
@@ -150,9 +159,10 @@ export default class ProductListComponent {
   }
 
   refreshCheckedStatus(): void {
-    this.allChecked = this.dataSource.every(({ id }) => this.setOfCheckedId.has(id))
+    this.allChecked =
+      !!this.dataSource.length && this.dataSource.every(({ _id }) => this.setOfCheckedId.has(_id))
     this.indeterminate =
-      this.dataSource.some(({ id }) => this.setOfCheckedId.has(id)) && !this.allChecked
+      this.dataSource.some(({ _id }) => this.setOfCheckedId.has(_id)) && !this.allChecked
   }
 
   onItemChecked(id: string, checked: boolean): void {
@@ -161,7 +171,7 @@ export default class ProductListComponent {
   }
 
   onAllChecked(checked: boolean): void {
-    this.dataSource.forEach(({ id }) => this.updateCheckedSet(id, checked))
+    this.dataSource.forEach(({ _id }) => this.updateCheckedSet(_id, checked))
     this.refreshCheckedStatus()
   }
 
@@ -176,10 +186,8 @@ export default class ProductListComponent {
     this.loading = true
     this.productService
       .getProducts({
-        pagination: {
-          pageNo: this.pageIndex,
-          pageSize: this.pageSize
-        },
+        pageNo: this.pageIndex,
+        pageSize: this.pageSize,
         keyword: this.keyword
       })
       .subscribe({

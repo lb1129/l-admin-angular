@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core'
 import { RouterModule, Routes } from '@angular/router'
 import { environment } from '@/environments/environment'
 import { authGuard } from '@/app/auth/guard'
-
 import { PageLoadingComponent } from '@/app/components/page-loading/page-loading.component'
 import { lazyLoad } from '@/app/utils/lazy-load'
 
@@ -25,7 +24,24 @@ const baseRoutes: Routes = [
         path: 'personalCenter',
         component: lazyLoad('personal-center', 'index'),
         // loadComponent: () => import('./pages/personal-center/index/index.component'),
-        data: { needAuth: true, menuName: 'personalCenter' }
+        data: { needAuth: true, menuName: 'personalCenter' },
+        children: [
+          {
+            path: '',
+            redirectTo: 'basicInfo',
+            pathMatch: 'full'
+          },
+          {
+            path: 'basicInfo',
+            component: lazyLoad('personal-center', 'basic-info'),
+            data: { needAuth: true, menuName: 'basicInfo' }
+          },
+          {
+            path: 'securitySetting',
+            component: lazyLoad('personal-center', 'security-setting'),
+            data: { needAuth: true, menuName: 'securitySetting' }
+          }
+        ]
       }
     ]
   },

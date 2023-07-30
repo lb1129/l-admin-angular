@@ -1,4 +1,5 @@
-export interface NewProduct {
+export interface ProductType {
+  _id: string
   name: string
   brand: string
   category: string
@@ -8,10 +9,7 @@ export interface NewProduct {
   enable: boolean
   inventory: number
   describe: string
-}
-
-export interface ProductType extends NewProduct {
-  id: string
+  images: string[]
 }
 
 export interface ProductPaginationType {
@@ -22,9 +20,7 @@ export interface ProductPaginationType {
 }
 
 export interface ProductsQueryParamsType {
-  pagination: {
-    pageNo: number
-    pageSize: number
-  }
+  pageNo: number
+  pageSize: number
   keyword?: string
 }

@@ -1,2 +1,0 @@
-import './authenticate'
-import './product'

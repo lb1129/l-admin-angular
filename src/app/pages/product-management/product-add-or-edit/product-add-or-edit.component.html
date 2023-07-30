@@ -96,6 +96,25 @@
               </nz-form-control>
             </nz-form-item>
           </div>
+          <div nz-col [nzSpan]="24">
+            <nz-form-item>
+              <nz-form-label>图片</nz-form-label>
+              <nz-form-control>
+                <nz-upload
+                  nzAccept="image/*"
+                  nzListType="picture-card"
+                  nzMultiple
+                  [(nzFileList)]="fileList"
+                  [nzCustomRequest]="customRequestHandler"
+                  [nzBeforeUpload]="beforeUploadHandler"
+                  [nzShowButton]="fileList.length < 5"
+                  [nzLimit]="5"
+                >
+                  <span nz-icon nzType="plus"></span>
+                </nz-upload>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
         </div>
       </form>
     </nz-skeleton>

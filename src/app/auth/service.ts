@@ -1,14 +1,15 @@
 import { Injectable } from '@angular/core'
-import { MenuStore } from '@/app/stores/menu'
-import type { OperateAuthType, MenuDataItemType } from '@/app/pages/personal-center/types'
-import { RouteTools } from '@/app/utils/route-tools'
 import { Observable, of, switchMap } from 'rxjs'
+import { RouteTools } from '@/app/utils/route-tools'
+import type { OperateAuthType, MenuDataItemType } from '@/app/types/menu'
+import { Store } from '@ngrx/store'
+import { menuSelectors } from '@/app/stores/menu/selectors'
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  constructor(private menuStore: MenuStore, private routeTools: RouteTools) {}
+  constructor(private store: Store, private routeTools: RouteTools) {}
 
   operateAuthValueToDisabled(operateAuthValue?: number) {
     // 值为0 无权限 返回true
@@ -18,7 +19,7 @@ export class AuthService {
   }
 
   getOperateAuth(operate: keyof OperateAuthType): Observable<boolean> {
-    return this.menuStore.data.pipe(
+    return this.store.select(menuSelectors.menuData).pipe(
       switchMap((menuData) => {
         let operateAuth: OperateAuthType = {}
         let iterativeMenuData = [...menuData]

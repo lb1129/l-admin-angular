@@ -13,7 +13,7 @@
       </span>
       <nz-dropdown-menu #colorPickerMenu>
         <app-color-picker
-          [appValue]="themeColor"
+          [appValue]="(themeColor | async)!"
           (appChange)="colorPickerChange($event)"
           [appPresets]="[
             '#1677ff',
@@ -32,8 +32,8 @@
         [nzDropdownMenu]="menu"
         class="index-header-right-item index-header-right-item_user"
       >
-        <nz-avatar nzSize="small" nzSrc="assets/image/user.png" />
-        <span style="margin-left: 8px">{{ userName }}</span>
+        <nz-avatar nzSize="small" [nzSrc]="(avatar | async)!" />
+        <span style="margin-left: 8px">{{ nickname | async }}</span>
       </span>
       <nz-dropdown-menu #menu>
         <ul nz-menu nzSelectable>

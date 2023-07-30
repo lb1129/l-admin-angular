@@ -1,10 +1,33 @@
-// Custom Theming for NG-ZORRO
-// For more information: https://ng.ant.design/docs/customize-theme/en
 @import url('~/ng-zorro-antd/ng-zorro-antd.variable.less');
 
-// Override less variables to here
-// View all variables: https://github.com/NG-ZORRO/ng-zorro-antd/blob/master/components/style/themes/default.less
+// 全局样式
 
-// @primary-color: #1890ff;
+ul,
+li {
+  list-style: none;
+  padding: 0;
+}
 
-/* You can add global styles to this file, and also import other style files */
+.ant-upload-list-picture-card {
+  display: inline-block;
+}
+
+img[nz-image] {
+  object-fit: cover;
+}
+
+img[nz-image]:not([ng-reflect-nz-disable-preview]) {
+  cursor: pointer;
+}
+
+.ant-page-header {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  &-content {
+    flex: 1;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+}

@@ -1,4 +1,5 @@
 export interface IResponse<T> {
   data: T
-  message: string
+  errCode: number
+  errMsg: string
 }

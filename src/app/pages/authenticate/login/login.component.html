@@ -4,10 +4,9 @@
       <nz-form-control [nzErrorTip]="translate.get('pleaseEnterAccount') | async">
         <nz-input-group class="input-group" nzPrefixIcon="user" nzSize="large">
           <input
-            type="text"
             nz-input
-            formControlName="userName"
-            [placeholder]="(translate.get('account') | async) + 'admin/viho/user'"
+            formControlName="username"
+            [placeholder]="translate.get('account') | async"
           />
         </nz-input-group>
       </nz-form-control>
@@ -19,7 +18,7 @@
             type="password"
             nz-input
             formControlName="password"
-            [placeholder]="(translate.get('password') | async) + 'a123456'"
+            [placeholder]="translate.get('password') | async"
           />
         </nz-input-group>
       </nz-form-control>

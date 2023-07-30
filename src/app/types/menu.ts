@@ -21,7 +21,3 @@ export interface MenuDataItemType {
   // 子级菜单
   children?: MenuDataItemType[]
 }
-
-export interface UserInfoType {
-  userName: string
-}

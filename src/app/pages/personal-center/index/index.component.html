@@ -1,1 +1,19 @@
-<p>个人中心</p>
+<ul class="personal-center">
+  <li class="personal-center-left">
+    <ul nz-menu nzMode="inline">
+      <li nz-menu-item nzMatchRouter nzMatchRouterExact>
+        <span>
+          <a routerLink="basicInfo">{{ translate.get('basicInfo') | async }}</a>
+        </span>
+      </li>
+      <li nz-menu-item nzMatchRouter nzMatchRouterExact>
+        <span>
+          <a routerLink="securitySetting">{{ translate.get('securitySetting') | async }}</a>
+        </span>
+      </li>
+    </ul>
+  </li>
+  <li class="personal-center-right">
+    <router-outlet></router-outlet>
+  </li>
+</ul>

@@ -3,16 +3,15 @@
     <nz-form-item>
       <nz-form-control [nzErrorTip]="translate.get('pleaseEnterAccount') | async">
         <input
-          type="text"
           nz-input
           nzSize="large"
-          formControlName="userName"
+          formControlName="username"
           [placeholder]="translate.get('account') | async"
         />
       </nz-form-control>
     </nz-form-item>
     <nz-form-item>
-      <nz-form-control [nzErrorTip]="translate.get('pleaseEnterPassword') | async">
+      <nz-form-control [nzErrorTip]="passwordErrorTpl">
         <input
           type="password"
           nz-input
@@ -20,10 +19,18 @@
           formControlName="password"
           [placeholder]="translate.get('password') | async"
         />
+        <ng-template #passwordErrorTpl let-control>
+          <ng-container *ngIf="control.hasError('password')">{{
+            translate.get('passwordRule') | async
+          }}</ng-container>
+          <ng-container *ngIf="control.hasError('required')">{{
+            translate.get('pleaseEnterPassword') | async
+          }}</ng-container>
+        </ng-template>
       </nz-form-control>
     </nz-form-item>
     <nz-form-item>
-      <nz-form-control [nzErrorTip]="translate.get('pleaseEnterPassword') | async">
+      <nz-form-control [nzErrorTip]="confirmPasswordErrorTpl">
         <input
           type="password"
           nz-input
@@ -31,17 +38,32 @@
           formControlName="confirmPassword"
           [placeholder]="translate.get('confirmPassword') | async"
         />
+        <ng-template #confirmPasswordErrorTpl let-control>
+          <ng-container *ngIf="control.hasError('confirmPassword')">{{
+            translate.get('twoPasswordsDoNotMatch') | async
+          }}</ng-container>
+          <ng-container *ngIf="control.hasError('required')">{{
+            translate.get('pleaseEnterPassword') | async
+          }}</ng-container>
+        </ng-template>
       </nz-form-control>
     </nz-form-item>
     <nz-form-item>
-      <nz-form-control [nzErrorTip]="translate.get('pleaseEnterMobileNumber') | async">
+      <nz-form-control [nzErrorTip]="phoneErrorTpl">
         <input
-          type="text"
           nz-input
           nzSize="large"
           formControlName="phone"
           [placeholder]="translate.get('mobileNumber') | async"
         />
+        <ng-template #phoneErrorTpl let-control>
+          <ng-container *ngIf="control.hasError('phone')">{{
+            translate.get('phoneRule') | async
+          }}</ng-container>
+          <ng-container *ngIf="control.hasError('required')">{{
+            translate.get('pleaseEnterMobileNumber') | async
+          }}</ng-container>
+        </ng-template>
       </nz-form-control>
     </nz-form-item>
     <nz-form-item [nzGutter]="16">
@@ -50,7 +72,6 @@
         [nzErrorTip]="translate.get('pleaseEnterVerificationCode') | async"
       >
         <input
-          type="text"
           nz-input
           nzSize="large"
           formControlName="code"
@@ -58,16 +79,26 @@
         />
       </nz-form-control>
       <nz-col nzSpan="8">
-        <button nz-button nzBlock nzSize="large">
-          {{ translate.get('getVerificationCode') | async }}
+        <button
+          nz-button
+          nzBlock
+          nzSize="large"
+          [nzLoading]="codeLoading"
+          [disabled]="codeTime > 0"
+          (click)="getCodeHandler($event)"
+        >
+          {{ getCodeText() | async }}
         </button>
       </nz-col>
     </nz-form-item>
+
+    <div *ngIf="phoneCode">{{ phoneCode }}</div>
+
     <nz-form-item style="display: block">
       <a routerLink="/login">{{ translate.get('haveAnAccount') | async }}</a>
     </nz-form-item>
 
-    <button nz-button nzType="primary" nzBlock nzSize="large">
+    <button nz-button nzType="primary" [nzLoading]="submitLoading" nzBlock nzSize="large">
       {{ translate.get('register') | async }}
     </button>
   </form>

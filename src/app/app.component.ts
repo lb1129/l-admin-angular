@@ -1,21 +1,17 @@
 import { Component, OnInit } from '@angular/core'
 import { Route, Data, Router } from '@angular/router'
-
-import { AuthenticateService } from '@/app/pages/authenticate/services'
-import { PersonalCenterService } from '@/app/pages/personal-center/service'
-
-import { MenuStore } from '@/app/stores/menu'
-import { UserInfoStore } from '@/app/stores/userInfo'
-import type { MenuDataItemType } from '@/app/pages/personal-center/types'
+import { cloneDeep } from 'lodash-es'
+import { AuthService } from '@/app/services/auth.service'
+import { UserService } from '@/app/services/user.service'
+import { MenuService } from '@/app/services/menu.service'
 import { lazyLoad } from '@/app/utils/lazy-load'
 import { RouteTools } from '@/app/utils/route-tools'
-
-import { cloneDeep } from 'lodash-es'
-
-import { ThemeLocalforage } from '@/app/storage/localforage'
-import { ThemeStore } from '@/app/stores/theme'
-
-import { NzConfigService } from 'ng-zorro-antd/core/config'
+import type { MenuDataItemType } from '@/app/types/menu'
+import { Store } from '@ngrx/store'
+import { userInfoActions } from '@/app/stores/user-info/actions'
+import { menuActions } from '@/app/stores/menu/actions'
+import { menuSelectors } from '@/app/stores/menu/selectors'
+import { Theme } from '@/app/utils/theme'
 
 @Component({
   selector: 'app-root',
@@ -24,16 +20,16 @@ import { NzConfigService } from 'ng-zorro-antd/core/config'
 })
 export class AppComponent implements OnInit {
   constructor(
-    private authenticateService: AuthenticateService,
-    private personalCenterService: PersonalCenterService,
-    private menuStore: MenuStore,
-    private userInfoStore: UserInfoStore,
+    private authService: AuthService,
+    private userService: UserService,
+    private menuService: MenuService,
+    private store: Store,
     private router: Router,
     private routeTools: RouteTools,
-    private themeLocalforage: ThemeLocalforage,
-    private themeStore: ThemeStore,
-    private nzConfigService: NzConfigService
+    private theme: Theme
   ) {}
+
+  hiddenInitLoading = false
 
   getChildrenPath(path: string) {
     if (/^\/.*/.test(path)) {
@@ -44,35 +40,32 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     // 主题色初始化
-    this.themeLocalforage.get().then((theme) => {
-      if (theme) {
-        this.themeStore.setData(theme)
-        this.nzConfigService.set('theme', {
-          primaryColor: theme
-        })
-      }
-    })
+    this.theme.init()
     // 已登录 初始菜单数据 用户信息
-    this.authenticateService.isLogin().subscribe({
+    this.authService.isLogin().subscribe({
       next: () => {
+        this.hiddenInitLoading = true
         // 获取菜单
-        this.personalCenterService.getMenu().subscribe((menuRes) => {
-          // 更新 menu store
-          this.menuStore.setData(menuRes.data)
+        this.menuService.getMenu().subscribe((menuRes) => {
+          // 更新菜单数据
+          this.store.dispatch(menuActions.setMenu({ payload: menuRes.data }))
+          // 更新菜单数据获取状态设置为完成
+          this.store.dispatch(menuActions.setMenuDone())
           // 获取用户信息
-          this.personalCenterService.getUserInfo().subscribe((userInfoRes) => {
+          this.userService.getUserInfo().subscribe((userInfoRes) => {
             // 更新 userInfo store
-            this.userInfoStore.setData(userInfoRes.data)
+            this.store.dispatch(userInfoActions.setUserInfo({ payload: userInfoRes.data }))
           })
         })
       },
       error: () => {
-        // 未登录 将 menu store 置为空
-        this.menuStore.setData([])
+        this.hiddenInitLoading = true
+        // 更新菜单数据获取状态设置为完成
+        this.store.dispatch(menuActions.setMenuDone())
       }
     })
     // 用户菜单数据生成动态路由
-    this.menuStore.data.subscribe((menuData) => {
+    this.store.select(menuSelectors.menu).subscribe((menu) => {
       const generateRoutes = (list: MenuDataItemType[], indexRoute?: Route) => {
         const res: Route[] = []
         if (indexRoute) {
@@ -127,25 +120,27 @@ export class AppComponent implements OnInit {
         })
         return res
       }
-      const routes = generateRoutes(menuData)
-
+      const routes = generateRoutes(menu.data)
       const baseRoutes = cloneDeep(this.router.config)
       // 将动态路由插入
       const insertTo = baseRoutes[0].children
       if (insertTo && insertTo.length) {
         baseRoutes[0].children = [insertTo[0], ...routes, insertTo[insertTo.length - 1]]
       }
-      // 删除404转圈
-      delete baseRoutes[baseRoutes.length - 1].component
-      // 为404路由添加loadComponent
-      baseRoutes[baseRoutes.length - 1].loadComponent = () =>
-        import('./pages/sundry/not-found/not-found.component')
-      // 重设路由
-      this.router.resetConfig(baseRoutes)
-      // 触发重新匹配
-      const { route } = this.routeTools.getActiveRoute()
-      if (route.snapshot.routeConfig?.path === '**')
-        this.router.navigateByUrl(this.router.url, { replaceUrl: true })
+      // 菜单获取状态为完成后
+      if (menu.done) {
+        // 删除404转圈
+        delete baseRoutes[baseRoutes.length - 1].component
+        // 为404路由添加loadComponent
+        baseRoutes[baseRoutes.length - 1].loadComponent = () =>
+          import('./pages/sundry/not-found/not-found.component')
+        // 重设路由
+        this.router.resetConfig(baseRoutes)
+        // 触发重新匹配
+        const { route } = this.routeTools.getActiveRoute()
+        if (route.snapshot.routeConfig?.path === '**')
+          this.router.navigateByUrl(this.router.url, { replaceUrl: true })
+      }
     })
   }
 }

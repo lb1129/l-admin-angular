@@ -1,0 +1,26 @@
+@import url('@/app/styles/variable.less');
+
+.basic-info-title {
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 28px;
+  margin-bottom: 24px;
+}
+
+.basic-info-image {
+  display: inline-block;
+  position: relative;
+
+  &-content {
+    display: inline-block;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 1px solid @border-color-base;
+  }
+
+  &-edit {
+    position: absolute;
+    bottom: 0;
+    left: 18px;
+  }
+}

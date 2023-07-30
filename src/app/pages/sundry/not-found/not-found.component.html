@@ -1,1 +1,10 @@
-<p>not-found works!</p>
+<div class="not-found">
+  <div class="not-found-title">404</div>
+  <div class="not-found-desc">{{ translate.get('pageNotFound') | async }}</div>
+  <div class="not-found-divider">
+    <nz-divider></nz-divider>
+  </div>
+  <button nz-button nzType="primary" nzGhost nzShape="round" (click)="goBack()">
+    {{ translate.get('back') | async }}
+  </button>
+</div>

@@ -11,15 +11,15 @@ import { NzFormModule } from 'ng-zorro-antd/form'
 import { NzInputModule } from 'ng-zorro-antd/input'
 import { NzButtonModule } from 'ng-zorro-antd/button'
 import { NzNotificationModule, NzNotificationService } from 'ng-zorro-antd/notification'
-import LayoutComponent from '../layout/layout.component'
-
-import { AuthenticateService } from '../services'
-import { PersonalCenterService } from '@/app/pages/personal-center/service'
-import { MenuStore } from '@/app/stores/menu'
-import { UserInfoStore } from '@/app/stores/userInfo'
-
-import { TokenLocalforage } from '@/app/storage/localforage'
 import { TranslateService } from '@ngx-translate/core'
+import { AuthService } from '@/app/services/auth.service'
+import { UserService } from '@/app/services/user.service'
+import { MenuService } from '@/app/services/menu.service'
+import { TokenLocalforage } from '@/app/storage/localforage'
+import LayoutComponent from '../layout/layout.component'
+import { Store } from '@ngrx/store'
+import { userInfoActions } from '@/app/stores/user-info/actions'
+import { menuActions } from '@/app/stores/menu/actions'
 
 @Component({
   imports: [
@@ -42,18 +42,18 @@ export default class LoginComponent {
   loading = false
 
   constructor(
-    private fb: UntypedFormBuilder,
-    private authenticateService: AuthenticateService,
-    private personalCenterService: PersonalCenterService,
     private router: Router,
+    private fb: UntypedFormBuilder,
     private notification: NzNotificationService,
-    private menuStore: MenuStore,
-    private userInfoStore: UserInfoStore,
     public translate: TranslateService,
+    private authService: AuthService,
+    private userService: UserService,
+    private menuService: MenuService,
+    private store: Store,
     public tokenLocalforage: TokenLocalforage
   ) {
     this.form = this.fb.group({
-      userName: ['', Validators.required],
+      username: ['', Validators.required],
       password: ['', Validators.required]
     })
   }
@@ -62,23 +62,23 @@ export default class LoginComponent {
     if (this.form.valid) {
       this.loading = true
       const value = this.form.value
-      this.authenticateService.login(value).subscribe({
+      this.authService.login(value).subscribe({
         next: async (res) => {
           await this.tokenLocalforage.set(res.data)
           // 获取菜单
-          this.personalCenterService.getMenu().subscribe((menuRes) => {
+          this.menuService.getMenu().subscribe((menuRes) => {
             // 更新 menu store
-            this.menuStore.setData(menuRes.data)
+            this.store.dispatch(menuActions.setMenu({ payload: menuRes.data }))
             // 获取用户信息
-            this.personalCenterService.getUserInfo().subscribe((userInfoRes) => {
+            this.userService.getUserInfo().subscribe((userInfoRes) => {
               // 更新 userInfo store
-              this.userInfoStore.setData(userInfoRes.data)
+              this.store.dispatch(userInfoActions.setUserInfo({ payload: userInfoRes.data }))
               // 跳转首页
               this.router.navigate([''], { replaceUrl: true })
               setTimeout(() => {
                 // 欢迎提示
                 this.translate.get('welcome').subscribe((message) => {
-                  this.notification.success(message, userInfoRes.data.userName)
+                  this.notification.success(message, userInfoRes.data.nickname)
                 })
               }, 200)
               this.loading = false

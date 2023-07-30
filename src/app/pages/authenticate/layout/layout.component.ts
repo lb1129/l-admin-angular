@@ -3,13 +3,11 @@ import { RouterModule } from '@angular/router'
 import { CommonModule } from '@angular/common'
 import { environment } from '@/environments/environment'
 import { NzDividerModule } from 'ng-zorro-antd/divider'
-
+import { TranslateService } from '@ngx-translate/core'
 import { ToggleLanguageComponent } from '@/app/components/toggle-language/toggle-language.component'
 
-import { TranslateService } from '@ngx-translate/core'
-
 @Component({
-  imports: [NzDividerModule, RouterModule, CommonModule, ToggleLanguageComponent],
+  imports: [RouterModule, CommonModule, NzDividerModule, ToggleLanguageComponent],
   selector: 'app-layout',
   templateUrl: './layout.component.html',
   styleUrls: ['./layout.component.less'],

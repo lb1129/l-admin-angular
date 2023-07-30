@@ -1,0 +1,70 @@
+<h1 class="security-setting-title">{{ translate.get('securitySetting') | async }}</h1>
+<nz-list>
+  <nz-list-item>
+    <nz-list-item-meta
+      [nzTitle]="translate.get('mobileNumber') | async"
+      [nzDescription]="phone | async"
+    >
+    </nz-list-item-meta>
+    <ul nz-list-item-actions>
+      <nz-list-item-action>
+        <a (click)="editHandler()">{{ translate.get('edit') | async }}</a>
+      </nz-list-item-action>
+    </ul>
+  </nz-list-item>
+</nz-list>
+<nz-modal
+  [(nzVisible)]="visible"
+  [nzTitle]="translate.get('editPhone') | async"
+  (nzOnCancel)="modalCancelHandler()"
+  (nzOnOk)="modalOkHandler()"
+  [nzMaskClosable]="false"
+  [nzOkLoading]="submitLoading"
+>
+  <ng-container *nzModalContent>
+    <form nz-form [formGroup]="form">
+      <nz-form-item>
+        <nz-form-control [nzErrorTip]="phoneErrorTpl">
+          <input
+            nz-input
+            formControlName="phone"
+            [placeholder]="translate.get('mobileNumber') | async"
+          />
+          <ng-template #phoneErrorTpl let-control>
+            <ng-container *ngIf="control.hasError('phone')">{{
+              translate.get('phoneRule') | async
+            }}</ng-container>
+            <ng-container *ngIf="control.hasError('required')">{{
+              translate.get('pleaseEnterMobileNumber') | async
+            }}</ng-container>
+          </ng-template>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item [nzGutter]="16">
+        <nz-form-control
+          nzSpan="16"
+          [nzErrorTip]="translate.get('pleaseEnterVerificationCode') | async"
+        >
+          <input
+            nz-input
+            formControlName="code"
+            [placeholder]="translate.get('verificationCode') | async"
+          />
+        </nz-form-control>
+        <nz-col nzSpan="8">
+          <button
+            nz-button
+            nzBlock
+            [nzLoading]="codeLoading"
+            [disabled]="codeTime > 0"
+            (click)="getCodeHandler($event)"
+          >
+            {{ getCodeText() | async }}
+          </button>
+        </nz-col>
+      </nz-form-item>
+
+      <div *ngIf="phoneCode">{{ phoneCode }}</div>
+    </form>
+  </ng-container>
+</nz-modal>

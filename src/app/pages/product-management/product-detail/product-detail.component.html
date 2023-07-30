@@ -12,16 +12,28 @@
   <nz-page-header-content>
     <nz-skeleton [nzLoading]="loading">
       <nz-descriptions nzBordered>
-        <nz-descriptions-item nzTitle="name">{{ details.name }}</nz-descriptions-item>
-        <nz-descriptions-item nzTitle="brand">{{ details.brand }}</nz-descriptions-item>
-        <nz-descriptions-item nzTitle="category">{{ details.category }}</nz-descriptions-item>
-        <nz-descriptions-item nzTitle="price">{{ details.price }}</nz-descriptions-item>
-        <nz-descriptions-item nzTitle="color">{{ details.color }}</nz-descriptions-item>
-        <nz-descriptions-item nzTitle="inventory">{{ details.inventory }}</nz-descriptions-item>
-        <nz-descriptions-item nzTitle="style" [nzSpan]="3">{{
-          details.style
+        <nz-descriptions-item nzTitle="名称">{{ details.name }}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="品牌">{{ details.brand }}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="分类">{{ details.category }}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="价格">{{ details.price }}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="颜色">{{ details.color }}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="库存">{{ details.inventory }}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="样式" [nzSpan]="3">{{ details.style }}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="描述" [nzSpan]="3">{{
+          details.describe
         }}</nz-descriptions-item>
-        <nz-descriptions-item nzTitle="describe">{{ details.describe }}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="图片" [nzSpan]="3">
+          <nz-image-group>
+            <img
+              nz-image
+              width="104px"
+              height="104px"
+              *ngFor="let url of details.images"
+              [nzSrc]="url"
+              :alt="url"
+            />
+          </nz-image-group>
+        </nz-descriptions-item>
       </nz-descriptions>
     </nz-skeleton>
   </nz-page-header-content>

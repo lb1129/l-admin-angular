@@ -1,0 +1,51 @@
+<h1 class="basic-info-title">{{ translate.get('basicInfo') | async }}</h1>
+<div nz-row>
+  <div nz-col [nzSpan]="14">
+    <form nz-form [formGroup]="form" nzLayout="vertical" (ngSubmit)="submitHandler()">
+      <nz-form-item>
+        <nz-form-label>{{ translate.get('nickname') | async }}</nz-form-label>
+        <nz-form-control [nzErrorTip]="translate.get('pleaseEnterNickname') | async">
+          <input
+            nz-input
+            formControlName="nickname"
+            [placeholder]="translate.get('pleaseEnterNickname') | async"
+          />
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label>{{ translate.get('profile') | async }}</nz-form-label>
+        <nz-form-control [nzErrorTip]="translate.get('pleaseEnterNickname') | async">
+          <textarea
+            nz-input
+            [rows]="4"
+            formControlName="profile"
+            [placeholder]="translate.get('profile') | async"
+          ></textarea>
+        </nz-form-control>
+      </nz-form-item>
+      <button nz-button nzType="primary" [nzLoading]="loading">
+        {{ translate.get('updateBasicInfo') | async }}
+      </button>
+    </form>
+  </div>
+  <div nz-col [nzSpan]="10" style="text-align: center">
+    <div class="basic-info-image">
+      <nz-spin [nzSpinning]="fileLoading">
+        <div class="basic-info-image-content">
+          <img nz-image width="200px" height="200px" [nzSrc]="(avatar | async)!" alt="" />
+        </div>
+      </nz-spin>
+      <nz-upload
+        class="basic-info-image-edit"
+        [nzLimit]="1"
+        nzAccept="image/*"
+        [nzShowUploadList]="false"
+        [nzCustomRequest]="customRequestHandler"
+      >
+        <button nz-button nzShape="circle" nzSize="large">
+          <span nz-icon nzType="edit"></span>
+        </button>
+      </nz-upload>
+    </div>
+  </div>
+</div>

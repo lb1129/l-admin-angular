@@ -1,15 +1,14 @@
 import { Injectable } from '@angular/core'
 import { HttpInterceptor, HttpHandler, HttpRequest, HttpResponse } from '@angular/common/http'
 import { Router } from '@angular/router'
-import { environment } from '@/environments/environment'
-import queryString from 'query-string'
-import { catchError, map, switchMap } from 'rxjs/operators'
+import { ReplaySubject, catchError, map, switchMap, from } from 'rxjs'
 import { NzMessageService } from 'ng-zorro-antd/message'
+import { NzI18nService } from 'ng-zorro-antd/i18n'
 import { TokenLocalforage } from '@/app/storage/localforage'
-import { Observable, ReplaySubject, delay } from 'rxjs'
 import isAuthenticated from '@/app/auth/isAuthenticated'
 import { RouteTools } from '@/app/utils/route-tools'
-import { NzI18nService } from 'ng-zorro-antd/i18n'
+import { Config } from '@/app/config'
+import { XMLParser } from 'fast-xml-parser'
 
 @Injectable()
 export class Interceptor implements HttpInterceptor {
@@ -18,58 +17,34 @@ export class Interceptor implements HttpInterceptor {
     private router: Router,
     private routeTools: RouteTools,
     private nzI18nService: NzI18nService,
-    private tokenLocalforage: TokenLocalforage
+    private tokenLocalforage: TokenLocalforage,
+    private config: Config
   ) {}
 
-  // 支持异步处理req
-  handleReq(req: HttpRequest<any>) {
-    return new Observable<HttpRequest<any>>((observer) => {
-      ;(async () => {
-        const token = await this.tokenLocalforage.get()
-        const newReq = req.clone({
-          url: environment.SERVER_IS_MOCK
-            ? queryString.stringifyUrl({
-                url: req.url,
-                query: {
-                  authorization: token
-                }
-              })
-            : req.url,
+  intercept(req: HttpRequest<any>, next: HttpHandler) {
+    return from(this.tokenLocalforage.get()).pipe(
+      map((token) => {
+        let url = req.url
+        // api补全url
+        if (/^\/?api\//i.test(url)) {
+          url = `${this.config.http.baseURL}${url}`
+        }
+        return req.clone({
+          url,
           setHeaders: {
-            Authorization: token,
-            // NOTE TranslateService 依赖 http 在此处使用会循环依赖
+            Authorization: `Bearer ${token}`,
             'Accept-Language': this.nzI18nService.getLocaleId()
           }
         })
-        observer.next(newReq)
-      })()
-    })
-  }
-
-  intercept(req: HttpRequest<any>, next: HttpHandler) {
-    // TODO status 500 retry
-    return this.handleReq(req).pipe(
+      }),
       switchMap((newReq) => {
         return next.handle(newReq)
       }),
-      // 处于 mock server 环境
-      delay(200),
+      // 响应处理
       map((event) => {
-        // 响应处理
+        // NOTE 默认行为就是使用接口返回的数据返回
         if (event instanceof HttpResponse) {
-          // 处于 mock server 环境
-          if (environment.SERVER_IS_MOCK) {
-            if (!event.body.status) {
-              return event
-            } else if (event.body.status >= 200 && event.body.status < 300) {
-              return event.clone({ body: event.body.data })
-            } else {
-              // 抛出错误 走catchError
-              throw event.clone({ body: event.body.data, status: event.body.status })
-            }
-          } else {
-            return event.clone({ body: event.body.data })
-          }
+          return event.clone({ body: event.body })
         }
         return event
       }),
@@ -85,7 +60,17 @@ export class Interceptor implements HttpInterceptor {
             this.router.navigate(['login'], { replaceUrl: true })
           }
         } else {
-          this.message.error(error.body ? error.body.message : error.message)
+          let message = ''
+          const contentType = error.headers.get('content-type')
+          // NOTE 阿里云oss错误响应是application/xml
+          if (contentType === 'application/xml') {
+            const parser = new XMLParser()
+            message = parser.parse(error.error).Error.Message
+          } else if (contentType === 'application/json') {
+            if (error.error.error) message = error.error.error.message
+            else message = error.error.errMsg
+          }
+          this.message.error(message)
         }
         // 再往外抛 让外部的错误处理可执行
         throw error

@@ -1,13 +1,10 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core'
-
 import { NzDropDownModule } from 'ng-zorro-antd/dropdown'
 import { NzIconModule } from 'ng-zorro-antd/icon'
 import { NzMenuModule } from 'ng-zorro-antd/menu'
-
-import { TranslateService } from '@ngx-translate/core'
 import { en_US, zh_CN, NzI18nService } from 'ng-zorro-antd/i18n'
+import { TranslateService } from '@ngx-translate/core'
 import { enUS, zhCN } from 'date-fns/locale'
-
 import { LocaleLocalforage } from '@/app/storage/localforage'
 
 @Component({

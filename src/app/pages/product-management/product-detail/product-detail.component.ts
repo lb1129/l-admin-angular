@@ -5,13 +5,11 @@ import { NzPageHeaderModule } from 'ng-zorro-antd/page-header'
 import { NzDescriptionsModule } from 'ng-zorro-antd/descriptions'
 import { NzSkeletonModule } from 'ng-zorro-antd/skeleton'
 import { NzButtonModule } from 'ng-zorro-antd/button'
-
-import type { ProductType } from '../types'
-import { ProductService } from '../services'
-
-import { AuthService } from '@/app/auth/service'
-
+import { NzImageModule } from 'ng-zorro-antd/image'
 import { TranslateService } from '@ngx-translate/core'
+import { AuthService } from '@/app/auth/service'
+import { ProductService } from '@/app/services/product.service'
+import type { ProductType } from '@/app/types/product'
 
 @Component({
   imports: [
@@ -19,6 +17,7 @@ import { TranslateService } from '@ngx-translate/core'
     NzDescriptionsModule,
     NzSkeletonModule,
     NzButtonModule,
+    NzImageModule,
     CommonModule
   ],
   selector: 'app-product-detail',
@@ -31,12 +30,12 @@ export default class ProductDetailComponent implements OnInit {
     private router: Router,
     private location: Location,
     private route: ActivatedRoute,
-    private productService: ProductService,
+    public translate: TranslateService,
     public auth: AuthService,
-    public translate: TranslateService
+    private productService: ProductService
   ) {}
   details: ProductType = {
-    id: '',
+    _id: '',
     name: '',
     brand: '',
     category: '',
@@ -45,9 +44,14 @@ export default class ProductDetailComponent implements OnInit {
     style: '',
     enable: true,
     inventory: 0,
-    describe: ''
+    describe: '',
+    images: []
   }
   loading = false
+
+  ngOnInit() {
+    this.loadData()
+  }
 
   loadData() {
     const id = this.route.snapshot.paramMap.get('id')
@@ -65,15 +69,11 @@ export default class ProductDetailComponent implements OnInit {
     }
   }
 
-  ngOnInit() {
-    this.loadData()
-  }
-
   backHandler() {
     this.location.back()
   }
 
   editHandler() {
-    this.router.navigate(['/productManagement/productAddOrEdit/', this.details.id])
+    this.router.navigate(['/productManagement/productAddOrEdit/', this.details._id])
   }
 }
