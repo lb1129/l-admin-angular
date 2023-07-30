@@ -7,7 +7,7 @@ import { NzSkeletonModule } from 'ng-zorro-antd/skeleton'
 import { NzButtonModule } from 'ng-zorro-antd/button'
 import { NzImageModule } from 'ng-zorro-antd/image'
 import { TranslateService } from '@ngx-translate/core'
-import { AuthService } from '@/app/auth/service'
+import { Auth } from '@/app/auth/auth'
 import { ProductService } from '@/app/services/product.service'
 import type { ProductType } from '@/app/types/product'
 
@@ -31,7 +31,7 @@ export default class ProductDetailComponent implements OnInit {
     private location: Location,
     private route: ActivatedRoute,
     public translate: TranslateService,
-    public auth: AuthService,
+    public auth: Auth,
     private productService: ProductService
   ) {}
   details: ProductType = {

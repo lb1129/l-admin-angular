@@ -8,7 +8,7 @@ import { menuSelectors } from '@/app/stores/menu/selectors'
 @Injectable({
   providedIn: 'root'
 })
-export class AuthService {
+export class Auth {
   constructor(private store: Store, private routeTools: RouteTools) {}
 
   operateAuthValueToDisabled(operateAuthValue?: number) {

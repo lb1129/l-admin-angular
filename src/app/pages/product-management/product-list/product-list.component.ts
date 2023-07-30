@@ -10,7 +10,7 @@ import { NzIconModule } from 'ng-zorro-antd/icon'
 import { NzMessageService } from 'ng-zorro-antd/message'
 import { TranslateService } from '@ngx-translate/core'
 import { ResizeDirective, type ResizeChangeRes } from '@/app/directives/resize/resize.directive'
-import { AuthService } from '@/app/auth/service'
+import { Auth } from '@/app/auth/auth'
 import { ProductService } from '@/app/services/product.service'
 import type { ProductType } from '@/app/types/product'
 import { productEditDone } from '@/app/pubsub'
@@ -48,7 +48,7 @@ export default class ProductListComponent implements OnInit, OnDestroy {
     public translate: TranslateService,
     private productService: ProductService,
     private message: NzMessageService,
-    public auth: AuthService
+    public auth: Auth
   ) {}
 
   allChecked = false
