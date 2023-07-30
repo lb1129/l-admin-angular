@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://lb1129.github.io/l-admin-angular/">
+  <a href="https://www.leibo.group/l-admin-angular/">
     <img width="100" src="https://github.com/lb1129/l-admin-angular/blob/master/src/assets/image/logo.svg">
   </a>
 </p>
@@ -26,8 +26,11 @@
 
 ## 特性
 
+- 代码校验
+- git 提交校验
+- git commit message 校验
 - standalone 模式
-- 在线主题色切换
+- 在线主题色切换（@ngx-translate/core）
 - 在线多语言切换
 - 懒加载
 - 基础路由
@@ -35,7 +38,11 @@
 - 登录跳转控制
 - 操作权限控制
 - ~~路由动画~~
-- 路由组件 keep-alive
+- 路由 keep-alive
+- http 拦截器封装
+- 按模块拆分 serve
+- store（@ngrx/store）
+- localforage
 - LESS
 - Typescript
 
@@ -43,7 +50,7 @@
 
 ## 在线预览
 
-[预览](https://lb1129.github.io/l-admin-angular/)
+[预览](https://www.leibo.group/l-admin-angular/)
 
 ## 开始使用
 
