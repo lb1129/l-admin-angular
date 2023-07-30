@@ -121,14 +121,14 @@ export class AppComponent implements OnInit {
         return res
       }
       const routes = generateRoutes(menu.data)
-      const baseRoutes = cloneDeep(this.router.config)
-      // 将动态路由插入
-      const insertTo = baseRoutes[0].children
-      if (insertTo && insertTo.length) {
-        baseRoutes[0].children = [insertTo[0], ...routes, insertTo[insertTo.length - 1]]
-      }
       // 菜单获取状态为完成后
       if (menu.done) {
+        const baseRoutes = cloneDeep(this.router.config)
+        // 将动态路由插入
+        const insertTo = baseRoutes[0].children
+        if (insertTo && insertTo.length) {
+          baseRoutes[0].children = [insertTo[0], ...routes, insertTo[insertTo.length - 1]]
+        }
         // 删除404转圈
         delete baseRoutes[baseRoutes.length - 1].component
         // 为404路由添加loadComponent
