@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser'
 import { HttpClientModule, HTTP_INTERCEPTORS, HttpClient } from '@angular/common/http'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { RouteReuseStrategy } from '@angular/router'
-import { registerLocaleData } from '@angular/common'
+import { registerLocaleData, APP_BASE_HREF } from '@angular/common'
 import zh from '@angular/common/locales/zh'
 import { NZ_I18N, zh_CN, NZ_DATE_LOCALE } from 'ng-zorro-antd/i18n'
 import { zhCN } from 'date-fns/locale'
@@ -17,6 +17,7 @@ import { CustomReuseStrategy } from '@/app/utils/custom-reuse-strategy'
 import { StoreModule } from '@ngrx/store'
 import reducers from '@/app/stores/index'
 import { PageLoadingComponent } from '@/app/components/page-loading/page-loading.component'
+import { environment } from '@/environments/environment'
 
 registerLocaleData(zh)
 
@@ -51,7 +52,8 @@ const HttpLoaderFactory = (http: HttpClient) => {
     },
     { provide: NZ_DATE_LOCALE, useValue: zhCN },
     { provide: LOCALE_ID, useValue: 'zh-CN' },
-    { provide: HTTP_INTERCEPTORS, useClass: Interceptor, multi: true }
+    { provide: HTTP_INTERCEPTORS, useClass: Interceptor, multi: true },
+    { provide: APP_BASE_HREF, useValue: environment.BASE_HREF }
   ],
   bootstrap: [AppComponent]
 })
